@@ -20,14 +20,6 @@ import javax.swing.JSlider
 
 class DevToolsTimeLineController(component: DevToolsPanelComponent) {
 
-    private val viewModels: Observable<DevToolsTimeLineViewModel>
-
-    val timeLineValues by lazy {
-        component.timeSliderValueDidChanged()
-                .map { (it.source as JSlider).value }
-                .distinctUntilChanged()
-    }
-
     private val subscriptionBag = CompositeSubscription()
 
     init {
@@ -35,11 +27,11 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
         val backwardCommand = component.backwardButtonDidPressed().map { DevToolsTimeLineViewModelCommand.Backward() }
         val playOrPauseCommand = component.actionButtonDidPressed().map { DevToolsTimeLineViewModelCommand.PlayOrPause() }
         val setValueCommand = component.timeSliderValueDidChanged().map { DevToolsTimeLineViewModelCommand.SetToValue((it.source as JSlider).value) }
-        val adjustMaxAndSendToMaxCommand = Server.inputs.concatMap {
+        val adjustMaxAndSendToMaxCommand = Server.messages.concatMap {
             Observable.from(listOf(DevToolsTimeLineViewModelCommand.AdjustMax(), DevToolsTimeLineViewModelCommand.SetToMax()))
         }
 
-        viewModels = Observable.merge(forwardCommand, backwardCommand, playOrPauseCommand, setValueCommand, adjustMaxAndSendToMaxCommand)
+        val viewModels = Observable.merge(forwardCommand, backwardCommand, playOrPauseCommand, setValueCommand, adjustMaxAndSendToMaxCommand)
                 .scan(DevToolsTimeLineViewModel(maxValue = 0)) { viewModel, command ->
                     viewModel.executeCommand(command)
                 }
@@ -88,6 +80,14 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
         viewModels.map { it.forwardEnabled }
                 .observeOn(SwingScheduler.getInstance())
                 .subscribe { component.timeLineForwardButton.isEnabled = it }
+                .addTo(subscriptionBag)
+
+        //notify client
+        viewModels.map { it.value }
+                .distinctUntilChanged()
+                .subscribe {
+                    Server.send(it.toString())
+                }
                 .addTo(subscriptionBag)
     }
 

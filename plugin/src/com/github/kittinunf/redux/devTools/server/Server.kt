@@ -1,42 +1,36 @@
 package com.github.kittinunf.redux.devTools.server
 
-import io.netty.handler.codec.http.websocketx.TextWebSocketFrame
-import io.reactivex.netty.RxNetty
-import io.reactivex.netty.server.RxServer
+import org.java_websocket.WebSocket
+import org.java_websocket.handshake.ClientHandshake
+import org.java_websocket.server.WebSocketServer
 import rx.subjects.BehaviorSubject
-import rx.subjects.PublishSubject
 import rx.subjects.SerializedSubject
+import java.net.InetSocketAddress
 
 /**
  * Created by kittinunf on 8/17/16.
  */
 
-object Server {
+object Server : WebSocketServer(InetSocketAddress(8989)) {
 
-    val DEFAULT_PORT = 8989
+    private val messageSubject = SerializedSubject(BehaviorSubject.create<String>())
+    val messages = messageSubject.asObservable()
 
-    private val server: RxServer<TextWebSocketFrame, TextWebSocketFrame>
-
-    private val sendSubject = PublishSubject.create<TextWebSocketFrame>()
-
-    private val inputSubject = SerializedSubject(BehaviorSubject.create<TextWebSocketFrame>())
-    val inputs = inputSubject.asObservable()
-
-    init {
-        server = RxNetty.newWebSocketServerBuilder<TextWebSocketFrame, TextWebSocketFrame>(DEFAULT_PORT, { connection ->
-            connection.input.subscribe(inputSubject)
-            sendSubject.flatMap {
-                connection.writeAndFlush(it)
-            }
-        }).build()
+    override fun onOpen(webSocket: WebSocket?, p1: ClientHandshake?) {
     }
 
-    fun start() {
-        server.start()
+    override fun onClose(webSocket: WebSocket?, p1: Int, p2: String?, p3: Boolean) {
     }
 
-    fun send(text: String) {
-        sendSubject.onNext(TextWebSocketFrame(text))
+    override fun onMessage(webSocket: WebSocket?, p1: String?) {
+        messageSubject.onNext(p1)
+    }
+
+    override fun onError(p0: WebSocket?, p1: Exception?) {
+    }
+
+    fun send(msg: String) {
+        connections().forEach { it.send(msg) }
     }
 
 }

@@ -1,5 +1,6 @@
-package com.github.kittinunf.redux.devTools.client
+package com.github.kittinunf.redux.devTools
 
+import org.java_websocket.WebSocket
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import rx.subjects.BehaviorSubject
@@ -7,7 +8,7 @@ import rx.subjects.SerializedSubject
 import java.net.URI
 
 /**
- * Created by kittinunf on 8/17/16.
+ * Created by kittinunf on 8/22/16.
  */
 
 object Client {
@@ -20,6 +21,7 @@ object Client {
     init {
         client = object : WebSocketClient(URI("ws://localhost:8989")) {
             override fun onOpen(p0: ServerHandshake?) {
+                println(p0)
             }
 
             override fun onClose(p0: Int, p1: String?, p2: Boolean) {

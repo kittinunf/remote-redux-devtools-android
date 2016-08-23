@@ -20,13 +20,13 @@ class DevToolsMonitorController(component: DevToolsPanelComponent) {
     private val subscriptionBag = CompositeSubscription()
 
     init {
-        val setItemsCommand = Server.inputs.map { DevToolsMonitorViewModelCommand.AddItem(Entry("ACTION", it.text())) }
+        val setItemsCommand = Server.messages.map { DevToolsMonitorViewModelCommand.AddItem(Entry("ACTION", it)) }
 
-        val monitorViewModels = setItemsCommand.scan(DevToolsMonitorViewModel()) { viewModel, command ->
+        val viewModels = setItemsCommand.scan(DevToolsMonitorViewModel()) { viewModel, command ->
             viewModel.executeCommand(command)
         }
 
-        monitorViewModels.map { viewModel -> viewModel.change to viewModel.items }
+        viewModels.map { viewModel -> viewModel.change to viewModel.items }
                 .observeOn(SwingScheduler.getInstance())
                 .subscribe { data ->
                     val (change, nodes) = data

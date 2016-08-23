@@ -37,7 +37,7 @@ class DevToolsWindowFactory : ToolWindowFactory {
         toolWindow.contentManager.addContent(content)
 
         Server.start()
-        Client.connect().addTo(subscriptionBag)
+        Client.connect()
 
         Observable.interval(2, TimeUnit.SECONDS)
                 .take(3)
@@ -46,8 +46,6 @@ class DevToolsWindowFactory : ToolWindowFactory {
                     Client.send(text)
                 }
                 .addTo(subscriptionBag)
-
-        timeLineController.timeLineValues.subscribe { println(it) }.addTo(subscriptionBag)
     }
 
 }
