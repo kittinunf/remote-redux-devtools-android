@@ -1,6 +1,6 @@
 package com.github.kittinunf.redux.devTools.controller
 
-import com.github.kittinunf.redux.devTools.server.Server
+import com.github.kittinunf.redux.devTools.socket.SocketServer
 import com.github.kittinunf.redux.devTools.ui.*
 import com.github.kittinunf.redux.devTools.util.addTo
 import com.github.kittinunf.redux.devTools.viewmodel.DevToolsTimeLineActionState
@@ -27,7 +27,7 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
         val backwardCommand = component.backwardButtonDidPressed().map { DevToolsTimeLineViewModelCommand.Backward() }
         val playOrPauseCommand = component.actionButtonDidPressed().map { DevToolsTimeLineViewModelCommand.PlayOrPause() }
         val setValueCommand = component.timeSliderValueDidChanged().map { DevToolsTimeLineViewModelCommand.SetToValue((it.source as JSlider).value) }
-        val adjustMaxAndSendToMaxCommand = Server.messages.concatMap {
+        val adjustMaxAndSendToMaxCommand = SocketServer.messages.concatMap {
             Observable.from(listOf(DevToolsTimeLineViewModelCommand.AdjustMax(), DevToolsTimeLineViewModelCommand.SetToMax()))
         }
 
@@ -86,7 +86,7 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
         viewModels.map { it.value }
                 .distinctUntilChanged()
                 .subscribe {
-                    Server.send(it.toString())
+                    SocketServer.send(it.toString())
                 }
                 .addTo(subscriptionBag)
     }

@@ -1,16 +1,11 @@
 package com.github.kittinunf.redux.devTools.controller
 
-import com.github.kittinunf.redux.devTools.client.Client
-import com.github.kittinunf.redux.devTools.server.Server
+import com.github.kittinunf.redux.devTools.socket.SocketServer
 import com.github.kittinunf.redux.devTools.ui.DevToolsPanelComponent
-import com.github.kittinunf.redux.devTools.util.addTo
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.ui.content.ContentFactory
-import rx.Observable
-import rx.subscriptions.CompositeSubscription
-import java.util.concurrent.TimeUnit
 
 /**
  * Created by kittinunf on 8/16/16.
@@ -23,8 +18,6 @@ class DevToolsWindowFactory : ToolWindowFactory {
     val monitorController: DevToolsMonitorController
     val timeLineController: DevToolsTimeLineController
 
-    val subscriptionBag = CompositeSubscription()
-
     init {
         component = DevToolsPanelComponent()
         monitorController = DevToolsMonitorController(component)
@@ -36,16 +29,7 @@ class DevToolsWindowFactory : ToolWindowFactory {
         val content = contentFactory.createContent(component.devToolsPanel, "", false)
         toolWindow.contentManager.addContent(content)
 
-        Server.start()
-        Client.connect()
-
-        Observable.interval(2, TimeUnit.SECONDS)
-                .take(3)
-                .subscribe {
-                    val text = "{ counter : $it }"
-                    Client.send(text)
-                }
-                .addTo(subscriptionBag)
+        if (!SocketServer.hasStarted) SocketServer.start()
     }
 
 }

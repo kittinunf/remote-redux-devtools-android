@@ -1,6 +1,5 @@
-package com.github.kittinunf.redux.devTools
+package com.github.kittinunf.redux.devTools.socket
 
-import org.java_websocket.WebSocket
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import rx.subjects.BehaviorSubject
@@ -11,7 +10,9 @@ import java.net.URI
  * Created by kittinunf on 8/22/16.
  */
 
-object Client {
+class SocketClient(port: Int = 8989) {
+
+    private val HOST = "ws://localhost:$port"
 
     private val client: WebSocketClient
 
@@ -19,25 +20,28 @@ object Client {
     val messages = messageSubject.asObservable()
 
     init {
-        client = object : WebSocketClient(URI("ws://localhost:8989")) {
-            override fun onOpen(p0: ServerHandshake?) {
-                println(p0)
+        client = object : WebSocketClient(URI(HOST)) {
+            override fun onOpen(handshake: ServerHandshake?) {
             }
 
-            override fun onClose(p0: Int, p1: String?, p2: Boolean) {
+            override fun onClose(code: Int, reason: String?, remote: Boolean) {
             }
 
-            override fun onMessage(p0: String?) {
-                messageSubject.onNext(p0)
+            override fun onMessage(message: String?) {
+                messageSubject.onNext(message)
             }
 
-            override fun onError(p0: Exception?) {
+            override fun onError(ex: Exception?) {
             }
         }
     }
 
     fun connect() {
         client.connect()
+    }
+
+    fun connectBlocking() {
+        client.connectBlocking()
     }
 
     fun send(msg: String) {

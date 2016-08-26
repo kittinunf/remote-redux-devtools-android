@@ -1,6 +1,6 @@
 package com.github.kittinunf.redux.devTools.controller
 
-import com.github.kittinunf.redux.devTools.server.Server
+import com.github.kittinunf.redux.devTools.socket.SocketServer
 import com.github.kittinunf.redux.devTools.ui.DevToolsPanelComponent
 import com.github.kittinunf.redux.devTools.util.addTo
 import com.github.kittinunf.redux.devTools.viewmodel.ChangeOperation
@@ -15,12 +15,13 @@ import javax.swing.tree.DefaultTreeModel
 /**
  * Created by kittinunf on 8/19/16.
  */
+
 class DevToolsMonitorController(component: DevToolsPanelComponent) {
 
     private val subscriptionBag = CompositeSubscription()
 
     init {
-        val setItemsCommand = Server.messages.map { DevToolsMonitorViewModelCommand.AddItem(Entry("ACTION", it)) }
+        val setItemsCommand = SocketServer.messages.map { DevToolsMonitorViewModelCommand.AddItem(Entry("ACTION", it)) }
 
         val viewModels = setItemsCommand.scan(DevToolsMonitorViewModel()) { viewModel, command ->
             viewModel.executeCommand(command)

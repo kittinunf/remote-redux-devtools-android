@@ -4,10 +4,14 @@ apply plugin: 'maven'
 
 group = 'com.github.kittinunf.redux'
 
+repositories {
+    maven { url "https://jitpack.io" }
+}
+
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile "org.java-websocket:Java-WebSocket:$java_websocket_version"
-    compile "io.reactivex:rxjava:$rxjava_version"
+    compile project(':devtools')
+
+    compile 'com.github.beyondeye.reduks:reduks-core:2.0.0b4'
 
     testCompile "junit:junit:$junit_version"
 }

@@ -1,1 +1,1 @@
-include ':sample', ':devtools'
+include ':sample', ':devtools', ':devtools-reduks'

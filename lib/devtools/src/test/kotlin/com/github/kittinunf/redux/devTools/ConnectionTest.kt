@@ -1,5 +1,6 @@
 package com.github.kittinunf.redux.devTools
 
+import com.github.kittinunf.redux.devTools.socket.SocketClient
 import org.junit.Test
 import java.util.concurrent.CountDownLatch
 
@@ -14,8 +15,8 @@ class ConnectionTest {
         val countdown = CountDownLatch(1)
         var i = 0
 
-        Client.connect()
-        Client.messages.subscribe {
+        val socket = SocketClient()
+        socket.messages.subscribe {
             i++
             println(it)
             if (i == 5) countdown.countDown()
