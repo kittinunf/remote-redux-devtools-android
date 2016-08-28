@@ -33,8 +33,8 @@ object SocketServer : WebSocketServer(InetSocketAddress(8989)) {
     override fun onError(webSocket: WebSocket?, ex: Exception?) {
     }
 
-    fun send(msg: String) {
-        connections().forEach { it.send(msg) }
+    fun send(message: String) {
+        connections().forEach { it.send(message) }
     }
 
 }

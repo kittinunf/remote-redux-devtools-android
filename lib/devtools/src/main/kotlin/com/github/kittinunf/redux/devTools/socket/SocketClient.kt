@@ -48,4 +48,12 @@ class SocketClient(port: Int = 8989) {
         client.send(msg)
     }
 
+    fun close() {
+        client.close()
+    }
+
+    fun closeBlocking() {
+        client.closeBlocking()
+    }
+
 }

@@ -6,31 +6,56 @@ import com.github.kittinunf.redux.devTools.socket.SocketClient
  * Created by kittinunf on 8/26/16.
  */
 
-val client = SocketClient()
-var started = false
+data class DevToolsOption(val port: Int, val maxAge: Int)
 
-var isMonitored = true
+class DevToolsStore<S>(options: DevToolsOption = DevToolsOption(8989, 30), initialState: S) {
 
-fun start() {
-    if (started) return
-    started = true
+    private var started = false
 
-    client.messages.subscribe(::handleSocketMessage)
-    client.connectBlocking()
-}
+    var isMonitored = true
 
-fun <S> handleStateChange(state: S, stateTimeLines: MutableList<S>) {
-    stateTimeLines.add(state)
-    client.send(state.toString())
+    private var currentStateIndex = 0
 
-    println(stateTimeLines)
-}
+    private val client: SocketClient
 
-private fun stop() {
-    started = false
-    isMonitored = false
-}
+    private val stateTimeLines = mutableListOf<S>()
 
-private fun handleSocketMessage(s: String) {
-    println("Incoming message: $s")
+    //app's view state
+    var state: S
+        private set
+        get() {
+            return stateTimeLines[currentStateIndex]
+        }
+
+    init {
+        client = SocketClient(options.port)
+        state = initialState
+        stateTimeLines.add(initialState)
+    }
+
+    fun start() {
+        if (started) return
+        started = true
+
+        client.messages.subscribe { handleSocketMessage(it) }
+        client.connectBlocking()
+    }
+
+    fun handleStateChange(state: S) {
+        stateTimeLines.add(state)
+        currentStateIndex = stateTimeLines.lastIndex
+        client.send(state.toString())
+    }
+
+    fun stop() {
+        started = false
+        isMonitored = false
+        client.closeBlocking()
+    }
+
+    private fun handleSocketMessage(s: String) {
+        val index = s.toInt()
+        currentStateIndex = index
+    }
+
 }

@@ -1,9 +1,7 @@
 package com.github.kittinunf.redux.devTools.reduks
 
 import com.beyondeye.reduks.*
-import com.github.kittinunf.redux.devTools.core.isMonitored
-import com.github.kittinunf.redux.devTools.core.handleStateChange
-import com.github.kittinunf.redux.devTools.core.start
+import com.github.kittinunf.redux.devTools.core.DevToolsStore
 
 /**
  * Created by kittinunf on 8/25/16.
@@ -12,20 +10,28 @@ import com.github.kittinunf.redux.devTools.core.start
 fun <S> devTools(): StoreEnhancer<S> {
     return StoreEnhancer { storeCreator ->
         object : StoreCreator<S> {
-
-            val stateTimeLines = mutableListOf<S>()
-
             override val storeStandardMiddlewares: Array<out Middleware<S>> = storeCreator.storeStandardMiddlewares
 
             override fun <S_> ofType(): StoreCreator<S_> = storeCreator.ofType()
 
             override fun create(reducer: Reducer<S>, initialState: S): Store<S> {
                 val store = storeCreator.create(reducer, initialState)
-                start()
+                val devToolStore = DevToolsStore<S>(store.state)
+                devToolStore.start()
                 store.subscribe(StoreSubscriber {
-                    if (isMonitored) handleStateChange(store.state, stateTimeLines)
+                    if (devToolStore.isMonitored) devToolStore.handleStateChange(store.state)
                 })
-                return store
+                return object : Store<S> {
+                    override var dispatch: (Any) -> Any = store.dispatch
+
+                    override val state: S = devToolStore.state
+
+                    override fun replaceReducer(reducer: Reducer<S>) {
+                        store.replaceReducer(reducer)
+                    }
+
+                    override fun subscribe(storeSubscriber: StoreSubscriber<S>): StoreSubscription = store.subscribe(storeSubscriber)
+                }
             }
         }
     }
