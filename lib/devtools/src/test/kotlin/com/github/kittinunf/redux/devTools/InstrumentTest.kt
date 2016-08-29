@@ -1,13 +1,12 @@
 package com.github.kittinunf.redux.devTools
 
-import com.github.kittinunf.redux.devTools.core.InstrumentOption
 import com.github.kittinunf.redux.devTools.core.Instrument
+import com.github.kittinunf.redux.devTools.core.InstrumentOption
 import org.hamcrest.MatcherAssert.assertThat
 import org.java_websocket.WebSocket
 import org.java_websocket.handshake.ClientHandshake
 import org.java_websocket.server.WebSocketServer
 import org.junit.AfterClass
-import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Test
 import java.net.InetSocketAddress
@@ -61,29 +60,30 @@ class InstrumentTest {
         object Decrement
     }
 
-    lateinit var instrument: Instrument<CounterState>
-
-    @Before
-    fun each() {
-        instrument = Instrument(InstrumentOption(TEST_PORT, 10), CounterState())
-        instrument.start()
-    }
 
     @Test
     fun `add new state, must put current state to last`() {
+        val instrument = Instrument(InstrumentOption("localhost", TEST_PORT, 10), CounterState())
+        instrument.start()
         instrument.handleStateChangeFromAction(CounterState(1), CounterAction.Increment)
         assertThat(instrument.state.counter, isEqualTo(1))
+        instrument.stop()
     }
 
     @Test
     fun `add multiple states, current state is the last added state`() {
+        val instrument = Instrument(InstrumentOption("localhost", TEST_PORT, 10), CounterState())
+        instrument.start()
         instrument.handleStateChangeFromAction(CounterState(1), CounterAction.Increment)
         instrument.handleStateChangeFromAction(CounterState(47), CounterAction.Increment)
         assertThat(instrument.state.counter, isEqualTo(47))
+        instrument.stop()
     }
 
     @Test
     fun `send command jump to state index, make current state shifted accordingly`() {
+        val instrument = Instrument(InstrumentOption("localhost", TEST_PORT, 10), CounterState())
+        instrument.start()
 
         instrument.handleStateChangeFromAction(CounterState(1), CounterAction.Increment) //0
         instrument.handleStateChangeFromAction(CounterState(8), CounterAction.Increment) //1
@@ -111,6 +111,8 @@ class InstrumentTest {
             mockSocketServer.connections().first().send(1.toString())
         }
         assertThat(instrument.state.counter, isEqualTo(8))
+
+        instrument.stop()
     }
 
     fun callThenWaitInSecond(l: Long, run: () -> Unit) {
