@@ -20,19 +20,22 @@ import javax.swing.JSlider
 
 class DevToolsTimeLineController(component: DevToolsPanelComponent) {
 
+    private val initialMaxValue = 0
+
     private val subscriptionBag = CompositeSubscription()
 
     init {
+        val resetCommand = SocketServer.messages.filter { it == "@@INIT" }.map { DevToolsTimeLineViewModelCommand.Reset(initialMaxValue) }
         val forwardCommand = component.forwardButtonDidPressed().map { DevToolsTimeLineViewModelCommand.Forward() }
         val backwardCommand = component.backwardButtonDidPressed().map { DevToolsTimeLineViewModelCommand.Backward() }
         val playOrPauseCommand = component.actionButtonDidPressed().map { DevToolsTimeLineViewModelCommand.PlayOrPause() }
         val setValueCommand = component.timeSliderValueDidChanged().map { DevToolsTimeLineViewModelCommand.SetToValue((it.source as JSlider).value) }
-        val adjustMaxAndSendToMaxCommand = SocketServer.messages.concatMap {
+        val adjustMaxAndSendToMaxCommand = SocketServer.messages.filter { it != "@@INIT" }.concatMap {
             Observable.from(listOf(DevToolsTimeLineViewModelCommand.AdjustMax(), DevToolsTimeLineViewModelCommand.SetToMax()))
         }
 
-        val viewModels = Observable.merge(forwardCommand, backwardCommand, playOrPauseCommand, setValueCommand, adjustMaxAndSendToMaxCommand)
-                .scan(DevToolsTimeLineViewModel(maxValue = 0)) { viewModel, command ->
+        val viewModels = Observable.merge(resetCommand, forwardCommand, backwardCommand, playOrPauseCommand, setValueCommand, adjustMaxAndSendToMaxCommand)
+                .scan(DevToolsTimeLineViewModel(maxValue = initialMaxValue)) { viewModel, command ->
                     viewModel.executeCommand(command)
                 }
                 .replay(1)

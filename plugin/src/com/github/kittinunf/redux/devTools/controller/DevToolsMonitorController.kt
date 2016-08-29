@@ -7,6 +7,8 @@ import com.github.kittinunf.redux.devTools.viewmodel.ChangeOperation
 import com.github.kittinunf.redux.devTools.viewmodel.DevToolsMonitorViewModel
 import com.github.kittinunf.redux.devTools.viewmodel.DevToolsMonitorViewModelCommand
 import com.github.kittinunf.redux.devTools.viewmodel.Entry
+import com.google.gson.JsonParser
+import rx.Observable
 import rx.schedulers.SwingScheduler
 import rx.subscriptions.CompositeSubscription
 import javax.swing.tree.DefaultMutableTreeNode
@@ -21,9 +23,13 @@ class DevToolsMonitorController(component: DevToolsPanelComponent) {
     private val subscriptionBag = CompositeSubscription()
 
     init {
-        val setItemsCommand = SocketServer.messages.map { DevToolsMonitorViewModelCommand.AddItem(Entry("ACTION", it)) }
+        val resetItemsCommand = SocketServer.messages.filter { it == "@@INIT" }.map { DevToolsMonitorViewModelCommand.SetItem() }
+        val addItemsCommand = SocketServer.messages.filter { it != "@@INIT" }.map {
+            val entry = Entry(JsonParser().parse(it).asJsonObject)
+            DevToolsMonitorViewModelCommand.AddItem(entry)
+        }
 
-        val viewModels = setItemsCommand.scan(DevToolsMonitorViewModel()) { viewModel, command ->
+        val viewModels = Observable.merge(resetItemsCommand, addItemsCommand).scan(DevToolsMonitorViewModel()) { viewModel, command ->
             viewModel.executeCommand(command)
         }
 

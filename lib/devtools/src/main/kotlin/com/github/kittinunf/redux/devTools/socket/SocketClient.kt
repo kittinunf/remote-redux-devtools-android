@@ -10,9 +10,9 @@ import java.net.URI
  * Created by kittinunf on 8/22/16.
  */
 
-class SocketClient(port: Int = 8989) {
+class SocketClient(host: String = "localhost", port: Int = 8989) {
 
-    private val HOST = "ws://localhost:$port"
+    private val PATH = "ws://$host:$port"
 
     private val client: WebSocketClient
 
@@ -20,7 +20,7 @@ class SocketClient(port: Int = 8989) {
     val messages = messageSubject.asObservable()
 
     init {
-        client = object : WebSocketClient(URI(HOST)) {
+        client = object : WebSocketClient(URI(PATH)) {
             override fun onOpen(handshake: ServerHandshake?) {
             }
 

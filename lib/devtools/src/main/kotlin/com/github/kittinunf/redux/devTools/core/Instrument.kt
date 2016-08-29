@@ -6,15 +6,15 @@ import com.github.kittinunf.redux.devTools.socket.SocketClient
  * Created by kittinunf on 8/26/16.
  */
 
-data class DevToolsOption(val port: Int, val maxAge: Int)
+data class InstrumentOption(val host: String, val port: Int, val maxAge: Int)
 
-class DevToolsStore<S>(options: DevToolsOption = DevToolsOption(8989, 30), initialState: S) {
+class Instrument<S>(options: InstrumentOption = InstrumentOption("localhost", 8989, 30), initialState: S) {
+
+    var isMonitored = false
 
     private var started = false
 
-    var isMonitored = true
-
-    private var currentStateIndex = 0
+    private var currentStateIndex = -1
 
     private val client: SocketClient
 
@@ -28,23 +28,24 @@ class DevToolsStore<S>(options: DevToolsOption = DevToolsOption(8989, 30), initi
         }
 
     init {
-        client = SocketClient(options.port)
+        client = SocketClient(options.host, options.port)
         state = initialState
-        stateTimeLines.add(initialState)
     }
 
     fun start() {
         if (started) return
         started = true
+        isMonitored = true
 
         client.messages.subscribe { handleSocketMessage(it) }
         client.connectBlocking()
+        client.send("@@INIT")
     }
 
-    fun handleStateChange(state: S) {
+    fun handleStateChangeFromAction(state: S, action: Any) {
         stateTimeLines.add(state)
         currentStateIndex = stateTimeLines.lastIndex
-        client.send(state.toString())
+        client.send("{\"action_name\" : \"${action.javaClass.simpleName}\", \"state\" : \"${state.toString()}\" }")
     }
 
     fun stop() {

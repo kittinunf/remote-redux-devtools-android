@@ -1,5 +1,6 @@
 package com.github.kittinunf.redux.devTools.viewmodel
 
+import com.google.gson.JsonObject
 import javax.swing.tree.DefaultMutableTreeNode
 
 /**
@@ -8,6 +9,8 @@ import javax.swing.tree.DefaultMutableTreeNode
 
 data class Entry(val actionName: String,
                  val state: String) {
+
+    constructor(json: JsonObject) : this(json["action_name"].asString, json["state"].asString)
 
     fun makeNode(): DefaultMutableTreeNode {
         return DefaultMutableTreeNode(actionName).apply {
@@ -20,6 +23,7 @@ data class Entry(val actionName: String,
 
 sealed class DevToolsMonitorViewModelCommand {
 
+    class SetItem(val items: List<Entry> = listOf()) : DevToolsMonitorViewModelCommand()
     class AddItem(val item: Entry) : DevToolsMonitorViewModelCommand()
 
 }
@@ -38,6 +42,10 @@ data class DevToolsMonitorViewModel(val change: ChangeOperation? = null, val ite
 
     fun executeCommand(command: DevToolsMonitorViewModelCommand): DevToolsMonitorViewModel {
         when (command) {
+            is DevToolsMonitorViewModelCommand.SetItem -> {
+                return DevToolsMonitorViewModel(null, command.items)
+            }
+
             is DevToolsMonitorViewModelCommand.AddItem -> {
                 val newItems = items.toMutableList()
                 newItems.add(command.item)

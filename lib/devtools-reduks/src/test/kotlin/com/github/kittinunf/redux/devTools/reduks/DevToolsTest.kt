@@ -15,12 +15,12 @@ class DevToolsTest {
     data class CounterState(val count: Int = 0)
 
     sealed class CounterAction {
-        object Init : CounterAction()
-        object Increment : CounterAction()
-        object Decrement : CounterAction()
+        object Init
+        object Increment
+        object Decrement
     }
 
-    val counterReducer = Reducer<CounterState> { state, action ->
+    fun counterReducer() = Reducer<CounterState> { state, action ->
         when (action) {
             is CounterAction.Init -> CounterState()
             is CounterAction.Increment -> {
@@ -36,17 +36,20 @@ class DevToolsTest {
     }
 
     @Test
-    fun testApplyDevTools() {
+    fun `apply devtools in to reduks store enhancer`() {
         val countdown = CountDownLatch(1)
         val store = SimpleStore.Creator<CounterState>()
-                .create(counterReducer, CounterState(), devTools<CounterState>())
+                .create(counterReducer(), CounterState(), devTools<CounterState>())
 
-        store.dispatch(CounterAction.Increment)
-        store.dispatch(CounterAction.Decrement)
-        store.dispatch(CounterAction.Increment)
-        store.dispatch(CounterAction.Increment)
-        store.dispatch(CounterAction.Decrement)
-        store.dispatch(CounterAction.Increment)
+        store.dispatch(CounterAction.Init) // = 0
+        store.dispatch(CounterAction.Increment) //+1
+        store.dispatch(CounterAction.Decrement) //-1
+        store.dispatch(CounterAction.Increment) //+1
+        store.dispatch(CounterAction.Increment) //+1
+        store.dispatch(CounterAction.Decrement) //-1
+        store.dispatch(CounterAction.Increment) //+1
+
+        println(store.state)
 
         countdown.await()
     }
