@@ -1,5 +1,6 @@
 package com.github.kittinunf.redux.devTools.controller
 
+import com.github.kittinunf.redux.devTools.action.InstrumentAction
 import com.github.kittinunf.redux.devTools.socket.SocketServer
 import com.github.kittinunf.redux.devTools.ui.*
 import com.github.kittinunf.redux.devTools.util.addTo
@@ -89,7 +90,8 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
         viewModels.map { it.value }
                 .distinctUntilChanged()
                 .subscribe {
-                    SocketServer.send(it.toString())
+                    val json = InstrumentAction.JumpToState(it).toJsonObject()
+                    SocketServer.send(json.toString())
                 }
                 .addTo(subscriptionBag)
     }

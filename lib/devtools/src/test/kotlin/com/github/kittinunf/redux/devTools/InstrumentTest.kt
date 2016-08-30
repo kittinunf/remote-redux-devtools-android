@@ -1,6 +1,7 @@
 package com.github.kittinunf.redux.devTools
 
 import com.github.kittinunf.redux.devTools.core.Instrument
+import com.github.kittinunf.redux.devTools.core.InstrumentAction
 import com.github.kittinunf.redux.devTools.core.InstrumentOption
 import org.hamcrest.MatcherAssert.assertThat
 import org.java_websocket.WebSocket
@@ -57,7 +58,6 @@ class InstrumentTest {
 
     sealed class CounterAction() {
         object Increment
-        object Decrement
     }
 
 
@@ -93,22 +93,22 @@ class InstrumentTest {
         assertThat(instrument.state.counter, isEqualTo(47))
 
         callThenWaitInSecond(2) {
-            mockSocketServer.connections().first().send(0.toString())
+            mockSocketServer.connections().first().send(InstrumentAction.JumpToState(0).toJsonObject().toString())
         }
         assertThat(instrument.state.counter, isEqualTo(1))
 
         callThenWaitInSecond(2) {
-            mockSocketServer.connections().first().send(3.toString())
+            mockSocketServer.connections().first().send(InstrumentAction.JumpToState(3).toJsonObject().toString())
         }
         assertThat(instrument.state.counter, isEqualTo(47))
 
         callThenWaitInSecond(2) {
-            mockSocketServer.connections().first().send(2.toString())
+            mockSocketServer.connections().first().send(InstrumentAction.JumpToState(2).toJsonObject().toString())
         }
         assertThat(instrument.state.counter, isEqualTo(4))
 
         callThenWaitInSecond(2) {
-            mockSocketServer.connections().first().send(1.toString())
+            mockSocketServer.connections().first().send(InstrumentAction.JumpToState(1).toJsonObject().toString())
         }
         assertThat(instrument.state.counter, isEqualTo(8))
 

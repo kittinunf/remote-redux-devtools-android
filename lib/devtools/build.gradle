@@ -8,6 +8,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "org.java-websocket:Java-WebSocket:$java_websocket_version"
     compile "io.reactivex:rxjava:$rxjava_version"
+    compile "com.google.code.gson:gson:$gson_version"
 
     testCompile "junit:junit:$junit_version"
 }

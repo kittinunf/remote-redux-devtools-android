@@ -14,16 +14,21 @@ import java.net.InetSocketAddress
 object SocketServer : WebSocketServer(InetSocketAddress(8989)) {
 
     private val messageSubject = SerializedSubject(BehaviorSubject.create<String>())
+    private val connectSubject = SerializedSubject(BehaviorSubject.create<WebSocket.READYSTATE>())
+
     val messages = messageSubject.asObservable()
+    val connects = connectSubject.asObservable()
 
     var hasStarted = false
 
     override fun onOpen(webSocket: WebSocket?, handshake: ClientHandshake?) {
         hasStarted = true
+        connectSubject.onNext(webSocket?.readyState)
     }
 
     override fun onClose(webSocket: WebSocket?, code: Int, reason: String?, remote: Boolean) {
         hasStarted = false
+        connectSubject.onNext(webSocket?.readyState)
     }
 
     override fun onMessage(webSocket: WebSocket?, message: String?) {
@@ -34,7 +39,9 @@ object SocketServer : WebSocketServer(InetSocketAddress(8989)) {
     }
 
     fun send(message: String) {
-        connections().forEach { it.send(message) }
+        if (connections().isNotEmpty()) {
+            connections().forEach { it.send(message) }
+        }
     }
 
 }

@@ -1,12 +1,12 @@
 package com.github.kittinunf.redux.devTools.controller
 
+import com.github.kittinunf.redux.devTools.action.InstrumentAction
 import com.github.kittinunf.redux.devTools.socket.SocketServer
 import com.github.kittinunf.redux.devTools.ui.DevToolsPanelComponent
 import com.github.kittinunf.redux.devTools.util.addTo
 import com.github.kittinunf.redux.devTools.viewmodel.ChangeOperation
 import com.github.kittinunf.redux.devTools.viewmodel.DevToolsMonitorViewModel
 import com.github.kittinunf.redux.devTools.viewmodel.DevToolsMonitorViewModelCommand
-import com.github.kittinunf.redux.devTools.viewmodel.Entry
 import com.google.gson.JsonParser
 import rx.Observable
 import rx.schedulers.SwingScheduler
@@ -25,8 +25,8 @@ class DevToolsMonitorController(component: DevToolsPanelComponent) {
     init {
         val resetItemsCommand = SocketServer.messages.filter { it == "@@INIT" }.map { DevToolsMonitorViewModelCommand.SetItem() }
         val addItemsCommand = SocketServer.messages.filter { it != "@@INIT" }.map {
-            val entry = Entry(JsonParser().parse(it).asJsonObject)
-            DevToolsMonitorViewModelCommand.AddItem(entry)
+            val state = InstrumentAction.State(JsonParser().parse(it).asJsonObject)
+            DevToolsMonitorViewModelCommand.AddItem(state)
         }
 
         val viewModels = Observable.merge(resetItemsCommand, addItemsCommand).scan(DevToolsMonitorViewModel()) { viewModel, command ->
@@ -58,4 +58,11 @@ class DevToolsMonitorController(component: DevToolsPanelComponent) {
                 .addTo(subscriptionBag)
     }
 
+}
+
+fun InstrumentAction.State.makeNode(): DefaultMutableTreeNode {
+    return DefaultMutableTreeNode(payload.second).apply {
+        val leaf = DefaultMutableTreeNode(payload.first)
+        add(leaf)
+    }
 }

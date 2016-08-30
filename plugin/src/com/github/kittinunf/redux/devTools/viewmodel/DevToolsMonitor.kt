@@ -1,30 +1,15 @@
 package com.github.kittinunf.redux.devTools.viewmodel
 
-import com.google.gson.JsonObject
-import javax.swing.tree.DefaultMutableTreeNode
+import com.github.kittinunf.redux.devTools.action.InstrumentAction
 
 /**
  * Created by kittinunf on 8/18/16.
  */
 
-data class Entry(val actionName: String,
-                 val state: String) {
-
-    constructor(json: JsonObject) : this(json["action_name"].asString, json["state"].asString)
-
-    fun makeNode(): DefaultMutableTreeNode {
-        return DefaultMutableTreeNode(actionName).apply {
-            val leaf = DefaultMutableTreeNode(state)
-            add(leaf)
-        }
-    }
-
-}
-
 sealed class DevToolsMonitorViewModelCommand {
 
-    class SetItem(val items: List<Entry> = listOf()) : DevToolsMonitorViewModelCommand()
-    class AddItem(val item: Entry) : DevToolsMonitorViewModelCommand()
+    class SetItem(val items: List<InstrumentAction.State> = listOf()) : DevToolsMonitorViewModelCommand()
+    class AddItem(val item: InstrumentAction.State) : DevToolsMonitorViewModelCommand()
 
 }
 
@@ -38,7 +23,7 @@ sealed class ChangeOperation() {
 
 }
 
-data class DevToolsMonitorViewModel(val change: ChangeOperation? = null, val items: List<Entry> = listOf()) {
+data class DevToolsMonitorViewModel(val change: ChangeOperation? = null, val items: List<InstrumentAction.State> = listOf()) {
 
     fun executeCommand(command: DevToolsMonitorViewModelCommand): DevToolsMonitorViewModel {
         when (command) {
