@@ -4,7 +4,10 @@ import com.beyondeye.reduks.Reducer
 import com.beyondeye.reduks.SimpleStore
 import com.beyondeye.reduks.create
 import org.junit.Test
+import rx.Observable
+import rx.schedulers.Schedulers
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by kittinunf on 8/26/16.
@@ -29,9 +32,7 @@ class DevToolsTest {
             is CounterAction.Decrement -> {
                 state.copy(count = state.count - 1)
             }
-            else -> {
-                throw IllegalStateException()
-            }
+            else -> state
         }
     }
 
@@ -49,7 +50,9 @@ class DevToolsTest {
         store.dispatch(CounterAction.Decrement) //-1
         store.dispatch(CounterAction.Increment) //+1
 
-        println(store.state)
+        Observable.interval(5, TimeUnit.SECONDS)
+                .subscribeOn(Schedulers.io())
+                .subscribe { println(store.state) }
 
         countdown.await()
     }

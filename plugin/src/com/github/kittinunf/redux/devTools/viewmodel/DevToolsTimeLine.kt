@@ -22,7 +22,8 @@ enum class DevToolsTimeLineActionState {
     PAUSE
 }
 
-data class DevToolsTimeLineViewModel(val state: DevToolsTimeLineActionState = DevToolsTimeLineActionState.PAUSE,
+data class DevToolsTimeLineViewModel(val initialState: Boolean = true,
+                                     val state: DevToolsTimeLineActionState = DevToolsTimeLineActionState.PAUSE,
                                      val value: Int = 0,
                                      val maxValue: Int,
                                      val backwardEnabled: Boolean = false,
@@ -31,7 +32,7 @@ data class DevToolsTimeLineViewModel(val state: DevToolsTimeLineActionState = De
     fun executeCommand(command: DevToolsTimeLineViewModelCommand): DevToolsTimeLineViewModel {
         when (command) {
             is DevToolsTimeLineViewModelCommand.Reset -> {
-                return DevToolsTimeLineViewModel(maxValue = command.maxValue)
+                return DevToolsTimeLineViewModel(initialState = true, maxValue = command.maxValue)
             }
 
             is DevToolsTimeLineViewModelCommand.Forward -> {
@@ -59,8 +60,8 @@ data class DevToolsTimeLineViewModel(val state: DevToolsTimeLineActionState = De
             }
 
             is DevToolsTimeLineViewModelCommand.AdjustMax -> {
-                val newMax = maxValue + 1
-                return this.copy(maxValue = newMax)
+                val newMax = if (initialState) maxValue else maxValue + 1
+                return this.copy(initialState = false, maxValue = newMax)
             }
 
             is DevToolsTimeLineViewModelCommand.SetToMax -> {
