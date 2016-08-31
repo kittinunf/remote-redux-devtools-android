@@ -7,6 +7,8 @@ import com.github.kittinunf.redux.devTools.core.Instrument
  * Created by kittinunf on 8/25/16.
  */
 
+object DevToolsStateChangeAction
+
 fun <S> devTools(): StoreEnhancer<S> {
     return StoreEnhancer { storeCreator ->
         object : StoreCreator<S> {
@@ -20,11 +22,15 @@ fun <S> devTools(): StoreEnhancer<S> {
                 instrument.start()
                 store.replaceReducer(Reducer<S> { s, any ->
                     val reducedState = reducer.reduce(s, any)
-                    if (instrument.isMonitored) instrument.handleStateChangeFromAction(reducedState, any)
+                    if (instrument.isMonitored && (any !is DevToolsStateChangeAction)) {
+                        instrument.handleStateChangeFromAction(reducedState, any)
+                    }
                     reducedState
                 })
                 return object : Store<S> {
-                    override var dispatch: (Any) -> Any = store.dispatch
+
+                    override var dispatch: (Any) -> Any = {}
+                        get() = store.dispatch
 
                     override val state: S
                         get() = instrument.state
@@ -33,7 +39,13 @@ fun <S> devTools(): StoreEnhancer<S> {
                         //intentionally left blank
                     }
 
-                    override fun subscribe(storeSubscriber: StoreSubscriber<S>): StoreSubscription = store.subscribe(storeSubscriber)
+                    override fun subscribe(storeSubscriber: StoreSubscriber<S>): StoreSubscription =
+                            store.subscribe(storeSubscriber)
+
+                    init {
+                        instrument.onMessageReceived = { store.dispatch(DevToolsStateChangeAction) }
+                    }
+
                 }
             }
         }

@@ -31,11 +31,11 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
         val backwardCommand = component.backwardButtonDidPressed().map { DevToolsTimeLineViewModelCommand.Backward() }
         val playOrPauseCommand = component.actionButtonDidPressed().map { DevToolsTimeLineViewModelCommand.PlayOrPause() }
         val setValueCommand = component.timeSliderValueDidChanged().map { DevToolsTimeLineViewModelCommand.SetToValue((it.source as JSlider).value) }
-        val adjustMaxAndSendToMaxCommand = SocketServer.messages.filter { it != "@@INIT" }.concatMap {
+        val adjustMaxAndSetToMaxCommand = SocketServer.messages.filter { it != "@@INIT" }.concatMap {
             Observable.from(listOf(DevToolsTimeLineViewModelCommand.AdjustMax(), DevToolsTimeLineViewModelCommand.SetToMax()))
         }
 
-        val viewModels = Observable.merge(resetCommand, forwardCommand, backwardCommand, playOrPauseCommand, setValueCommand, adjustMaxAndSendToMaxCommand)
+        val viewModels = Observable.merge(resetCommand, forwardCommand, backwardCommand, playOrPauseCommand, setValueCommand, adjustMaxAndSetToMaxCommand)
                 .scan(DevToolsTimeLineViewModel(maxValue = initialMaxValue)) { viewModel, command ->
                     viewModel.executeCommand(command)
                 }
@@ -87,7 +87,8 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
                 .addTo(subscriptionBag)
 
         //notify client
-        viewModels.map { it.value }
+        viewModels.filter { it.shouldNotifyClient == true }
+                .map { it.value }
                 .distinctUntilChanged()
                 .subscribe {
                     val json = InstrumentAction.JumpToState(it).toJsonObject()

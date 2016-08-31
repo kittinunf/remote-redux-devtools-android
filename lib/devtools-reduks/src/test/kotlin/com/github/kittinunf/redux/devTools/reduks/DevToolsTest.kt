@@ -3,11 +3,9 @@ package com.github.kittinunf.redux.devTools.reduks
 import com.beyondeye.reduks.Reducer
 import com.beyondeye.reduks.SimpleStore
 import com.beyondeye.reduks.create
+import com.beyondeye.reduks.subscribe
 import org.junit.Test
-import rx.Observable
-import rx.schedulers.Schedulers
 import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
 
 /**
  * Created by kittinunf on 8/26/16.
@@ -42,6 +40,10 @@ class DevToolsTest {
         val store = SimpleStore.Creator<CounterState>()
                 .create(counterReducer(), CounterState(), devTools<CounterState>())
 
+        store.subscribe {
+            println(store.state)
+        }
+
         store.dispatch(CounterAction.Init) // = 0
         store.dispatch(CounterAction.Increment) //+1
         store.dispatch(CounterAction.Decrement) //-1
@@ -49,10 +51,6 @@ class DevToolsTest {
         store.dispatch(CounterAction.Increment) //+1
         store.dispatch(CounterAction.Decrement) //-1
         store.dispatch(CounterAction.Increment) //+1
-
-        Observable.interval(5, TimeUnit.SECONDS)
-                .subscribeOn(Schedulers.io())
-                .subscribe { println(store.state) }
 
         countdown.await()
     }

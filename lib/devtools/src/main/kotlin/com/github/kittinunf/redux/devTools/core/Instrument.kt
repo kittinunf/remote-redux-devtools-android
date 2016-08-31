@@ -59,6 +59,8 @@ class Instrument<S>(options: InstrumentOption = InstrumentOption("localhost", 89
 
     private val stateTimeLines = mutableListOf<S>()
 
+    var onMessageReceived: ((S) -> Unit)? = null
+
     //app's view state
     var state: S
         private set
@@ -76,7 +78,7 @@ class Instrument<S>(options: InstrumentOption = InstrumentOption("localhost", 89
         started = true
         isMonitored = true
 
-        client.messages.subscribe { handleSocketMessage(it) }
+        client.messages.subscribe { handleMessageReceived(it) }
         client.connectBlocking()
         client.send("@@INIT")
     }
@@ -94,10 +96,11 @@ class Instrument<S>(options: InstrumentOption = InstrumentOption("localhost", 89
         client.closeBlocking()
     }
 
-    private fun handleSocketMessage(s: String) {
+    private fun handleMessageReceived(s: String) {
         val json = JsonParser().parse(s).asJsonObject
         val index = InstrumentAction.JumpToState(json).payload
         currentStateIndex = index
+        onMessageReceived?.invoke(state)
     }
 
 }
