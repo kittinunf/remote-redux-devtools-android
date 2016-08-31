@@ -19,15 +19,15 @@ object SocketServer : WebSocketServer(InetSocketAddress(8989)) {
     val messages = messageSubject.asObservable()
     val connects = connectSubject.asObservable()
 
-    var hasStarted = false
+    init {
+        start()
+    }
 
     override fun onOpen(webSocket: WebSocket?, handshake: ClientHandshake?) {
-        hasStarted = true
         connectSubject.onNext(webSocket?.readyState)
     }
 
     override fun onClose(webSocket: WebSocket?, code: Int, reason: String?, remote: Boolean) {
-        hasStarted = false
         connectSubject.onNext(webSocket?.readyState)
     }
 
@@ -36,6 +36,7 @@ object SocketServer : WebSocketServer(InetSocketAddress(8989)) {
     }
 
     override fun onError(webSocket: WebSocket?, ex: Exception?) {
+        connectSubject.onNext(webSocket?.readyState)
     }
 
     fun send(message: String) {

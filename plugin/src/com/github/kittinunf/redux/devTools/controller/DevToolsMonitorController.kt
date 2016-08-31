@@ -29,9 +29,10 @@ class DevToolsMonitorController(component: DevToolsPanelComponent) {
             DevToolsMonitorViewModelCommand.AddItem(state)
         }
 
-        val viewModels = Observable.merge(resetItemsCommand, addItemsCommand).scan(DevToolsMonitorViewModel()) { viewModel, command ->
-            viewModel.executeCommand(command)
-        }
+        val viewModels = Observable.merge(resetItemsCommand, addItemsCommand)
+                .scan(DevToolsMonitorViewModel()) { viewModel, command ->
+                    viewModel.executeCommand(command)
+                }
 
         viewModels.map { viewModel -> viewModel.change to viewModel.items }
                 .observeOn(SwingScheduler.getInstance())

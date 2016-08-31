@@ -4,7 +4,6 @@ package com.github.kittinunf.redux.devTools.viewmodel
  * Created by kittinunf on 8/16/16.
  */
 
-
 sealed class DevToolsTimeLineViewModelCommand {
 
     class Reset(val maxValue: Int) : DevToolsTimeLineViewModelCommand()

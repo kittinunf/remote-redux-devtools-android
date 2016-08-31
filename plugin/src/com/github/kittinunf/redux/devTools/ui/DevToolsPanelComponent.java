@@ -16,6 +16,9 @@ public class DevToolsPanelComponent {
 
     public JPanel devToolsPanel;
 
+    public JLabel serverAddressLabel;
+    public JLabel serverStatusLabel;
+
     public JTree monitorStateTree;
 
     public JButton timeLineActionButton;
