@@ -47,7 +47,9 @@ sealed class InstrumentAction(open val type: String, open val payload: Any? = nu
 
 data class InstrumentOption(val host: String, val port: Int, val maxAge: Int)
 
-class Instrument<S>(options: InstrumentOption = InstrumentOption("localhost", 8989, 30), initialState: S) {
+fun defaultOption() = InstrumentOption("localhost", 8989, 30)
+
+class Instrument<S>(options: InstrumentOption, initialState: S) {
 
     var isMonitored = false
 

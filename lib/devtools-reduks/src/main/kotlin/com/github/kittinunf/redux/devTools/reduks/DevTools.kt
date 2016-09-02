@@ -2,6 +2,8 @@ package com.github.kittinunf.redux.devTools.reduks
 
 import com.beyondeye.reduks.*
 import com.github.kittinunf.redux.devTools.core.Instrument
+import com.github.kittinunf.redux.devTools.core.InstrumentOption
+import com.github.kittinunf.redux.devTools.core.defaultOption
 
 /**
  * Created by kittinunf on 8/25/16.
@@ -9,7 +11,7 @@ import com.github.kittinunf.redux.devTools.core.Instrument
 
 object DevToolsStateChangeAction
 
-fun <S> devTools(): StoreEnhancer<S> {
+fun <S> devTools(option: InstrumentOption = defaultOption()): StoreEnhancer<S> {
     return StoreEnhancer { storeCreator ->
         object : StoreCreator<S> {
             override val storeStandardMiddlewares: Array<out Middleware<S>> = storeCreator.storeStandardMiddlewares
@@ -18,12 +20,12 @@ fun <S> devTools(): StoreEnhancer<S> {
 
             override fun create(reducer: Reducer<S>, initialState: S): Store<S> {
                 val store = storeCreator.create(reducer, initialState)
-                val instrument = Instrument<S>(initialState = store.state)
+                val instrument = Instrument<S>(option, store.state)
                 instrument.start()
-                store.replaceReducer(Reducer<S> { s, any ->
-                    val reducedState = reducer.reduce(s, any)
-                    if (instrument.isMonitored && (any !is DevToolsStateChangeAction)) {
-                        instrument.handleStateChangeFromAction(reducedState, any)
+                store.replaceReducer(Reducer<S> { state, action ->
+                    val reducedState = reducer.reduce(state, action)
+                    if (instrument.isMonitored && (action !is DevToolsStateChangeAction)) {
+                        instrument.handleStateChangeFromAction(reducedState, action)
                     }
                     reducedState
                 })
