@@ -1,7 +1,6 @@
 package com.github.kittinunf.redux.devTools.core
 
 import com.github.kittinunf.redux.devTools.socket.SocketClient
-import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import java.util.*
 
@@ -13,7 +12,7 @@ data class InstrumentOption(val host: String, val port: Int, val name: String, v
 
 fun defaultOption() = InstrumentOption("localhost", 8989, UUID.randomUUID().toString(), 30)
 
-class Instrument<S>(options: InstrumentOption, initialState: S) {
+class Instrument<S>(options: InstrumentOption, val initialState: S) {
 
     var isMonitored = false
 
@@ -30,15 +29,14 @@ class Instrument<S>(options: InstrumentOption, initialState: S) {
     var onMessageReceived: ((S) -> Unit)? = null
 
     //app's view state
-    var state: S
+    var state: S = initialState
         private set
         get() {
-            return stateTimeLines[currentStateIndex]
+            return stateTimeLines.getOrNull(currentStateIndex) ?: initialState
         }
 
     init {
         client = SocketClient(options.host, options.port)
-        state = initialState
         name = options.name
     }
 
