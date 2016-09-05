@@ -1,9 +1,9 @@
-package com.github.kittinunf.redux.devTools.action
+package com.github.kittinunf.redux.devTools.core
 
 import com.google.gson.JsonObject
 
 /**
- * Created by kittinunf on 8/30/16.
+ * Created by kittinunf on 9/5/16.
  */
 
 sealed class InstrumentAction(open val type: String, open val payload: Any? = null) {
@@ -60,4 +60,3 @@ sealed class InstrumentAction(open val type: String, open val payload: Any? = nu
     }
 
 }
-

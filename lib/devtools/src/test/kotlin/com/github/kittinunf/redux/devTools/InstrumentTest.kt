@@ -63,7 +63,7 @@ class InstrumentTest {
 
     @Test
     fun `add new state, must put current state to last`() {
-        val instrument = Instrument(InstrumentOption("localhost", TEST_PORT, 10), CounterState())
+        val instrument = Instrument(InstrumentOption("localhost", TEST_PORT, "TEST_CLIENT", 10), CounterState())
         instrument.start()
         instrument.handleStateChangeFromAction(CounterState(1), CounterAction.Increment)
         assertThat(instrument.state.counter, isEqualTo(1))
@@ -72,7 +72,7 @@ class InstrumentTest {
 
     @Test
     fun `add multiple states, current state is the last added state`() {
-        val instrument = Instrument(InstrumentOption("localhost", TEST_PORT, 10), CounterState())
+        val instrument = Instrument(InstrumentOption("localhost", TEST_PORT, "TEST_CLIENT", 10), CounterState())
         instrument.start()
         instrument.handleStateChangeFromAction(CounterState(1), CounterAction.Increment)
         instrument.handleStateChangeFromAction(CounterState(47), CounterAction.Increment)
@@ -82,7 +82,7 @@ class InstrumentTest {
 
     @Test
     fun `send command jump to state index, make current state shifted accordingly`() {
-        val instrument = Instrument(InstrumentOption("localhost", TEST_PORT, 10), CounterState())
+        val instrument = Instrument(InstrumentOption("localhost", TEST_PORT, "TEST_CLIENT", 10), CounterState())
         instrument.start()
 
         instrument.handleStateChangeFromAction(CounterState(1), CounterAction.Increment) //0

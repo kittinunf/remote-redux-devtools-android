@@ -17,21 +17,28 @@
         <border type="etched" title="Status"/>
         <children>
           <component id="90a1e" class="javax.swing.JLabel" binding="serverAddressLabel">
-            <margin top="20" left="20" bottom="20" right="20"/>
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="0.0.0.0:0000"/>
             </properties>
           </component>
-          <component id="372a7" class="javax.swing.JLabel" binding="serverStatusLabel">
-            <margin top="20" left="20" bottom="20" right="20"/>
+          <component id="1f4db" class="javax.swing.JLabel">
             <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="1" indent="1" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Status: "/>
+              <labelFor value="372a7"/>
+              <text value="Instance: "/>
+            </properties>
+          </component>
+          <component id="372a7" class="javax.swing.JLabel" binding="serverStatusLabel">
+            <constraints>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="-"/>
             </properties>
           </component>
         </children>

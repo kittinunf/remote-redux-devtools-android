@@ -23,11 +23,16 @@ class DevToolsMonitorController(component: DevToolsPanelComponent) {
     private val subscriptionBag = CompositeSubscription()
 
     init {
-        val resetItemsCommand = SocketServer.messages.filter { it == "@@INIT" }.map { DevToolsMonitorViewModelCommand.SetItem() }
-        val addItemsCommand = SocketServer.messages.filter { it != "@@INIT" }.map {
-            val state = InstrumentAction.State(JsonParser().parse(it).asJsonObject)
-            DevToolsMonitorViewModelCommand.AddItem(state)
-        }
+        val resetItemsCommand = SocketServer.messages.map { JsonParser().parse(it).asJsonObject }
+                .filter { it["type"].asString == InstrumentAction.ActionType.INIT.name }
+                .map { DevToolsMonitorViewModelCommand.SetItem() }
+
+        val addItemsCommand = SocketServer.messages.map { JsonParser().parse(it).asJsonObject }
+                .filter { it["type"].asString == InstrumentAction.ActionType.STATE.name }
+                .map {
+                    val state = InstrumentAction.State(it)
+                    DevToolsMonitorViewModelCommand.AddItem(state)
+                }
 
         val viewModels = Observable.merge(resetItemsCommand, addItemsCommand)
                 .scan(DevToolsMonitorViewModel()) { viewModel, command ->

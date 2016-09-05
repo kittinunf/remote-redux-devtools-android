@@ -3,51 +3,15 @@ package com.github.kittinunf.redux.devTools.core
 import com.github.kittinunf.redux.devTools.socket.SocketClient
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import java.util.*
 
 /**
  * Created by kittinunf on 8/26/16.
  */
 
-sealed class InstrumentAction(open val type: String, open val payload: Any? = null) {
+data class InstrumentOption(val host: String, val port: Int, val name: String, val maxAge: Int)
 
-    fun toJsonObject(): JsonObject = JsonObject().apply {
-        addProperty("type", type)
-        buildJson()()
-    }
-
-    abstract protected fun buildJson(): JsonObject.() -> Unit
-
-    class State(override val payload: Pair<String, String>) : InstrumentAction(type = "State") {
-
-        constructor(json: JsonObject) : this(json["payload"].asJsonObject["state"].asString to json["payload"].asJsonObject["action"].asString)
-
-        override fun buildJson(): JsonObject.() -> Unit {
-            return {
-                add("payload", JsonObject().apply {
-                    addProperty("state", payload.first)
-                    addProperty("action", payload.second)
-                })
-            }
-        }
-
-    }
-
-    class JumpToState(override val payload: Int) : InstrumentAction(type = "JumpToState") {
-
-        constructor(json: JsonObject) : this(json["payload"].asInt)
-
-        override fun buildJson(): JsonObject.() -> Unit {
-            return {
-                addProperty("payload", payload)
-            }
-        }
-    }
-
-}
-
-data class InstrumentOption(val host: String, val port: Int, val maxAge: Int)
-
-fun defaultOption() = InstrumentOption("localhost", 8989, 30)
+fun defaultOption() = InstrumentOption("localhost", 8989, UUID.randomUUID().toString(), 30)
 
 class Instrument<S>(options: InstrumentOption, initialState: S) {
 
@@ -61,6 +25,8 @@ class Instrument<S>(options: InstrumentOption, initialState: S) {
 
     private val stateTimeLines = mutableListOf<S>()
 
+    private val name: String
+
     var onMessageReceived: ((S) -> Unit)? = null
 
     //app's view state
@@ -73,6 +39,7 @@ class Instrument<S>(options: InstrumentOption, initialState: S) {
     init {
         client = SocketClient(options.host, options.port)
         state = initialState
+        name = options.name
     }
 
     fun start() {
@@ -82,7 +49,9 @@ class Instrument<S>(options: InstrumentOption, initialState: S) {
 
         client.messages.subscribe { handleMessageReceived(it) }
         client.connectBlocking()
-        client.send("@@INIT")
+
+        val message = InstrumentAction.Init(name).toJsonObject().toString()
+        client.send(message)
     }
 
     fun handleStateChangeFromAction(state: S, action: Any) {

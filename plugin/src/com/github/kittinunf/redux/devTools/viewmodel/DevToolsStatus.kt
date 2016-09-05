@@ -11,7 +11,7 @@ sealed class DevToolsStatusViewModelCommand {
 
 }
 
-data class DevToolsStatusViewModel(val address: String = "", val status: String = "Status: ") {
+data class DevToolsStatusViewModel(val address: String = "", val status: String = "-") {
 
     fun executeCommand(command: DevToolsStatusViewModelCommand): DevToolsStatusViewModel {
         when (command) {
@@ -20,7 +20,7 @@ data class DevToolsStatusViewModel(val address: String = "", val status: String 
             }
 
             is DevToolsStatusViewModelCommand.SetStatus -> {
-                return this.copy(status = "Status: ${command.status}")
+                return this.copy(status = command.status)
             }
         }
     }

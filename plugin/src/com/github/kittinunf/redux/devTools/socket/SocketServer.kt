@@ -11,10 +11,16 @@ import java.net.InetSocketAddress
  * Created by kittinunf on 8/17/16.
  */
 
+enum class SocketStatus {
+    OPEN,
+    CLOSE,
+    ERROR
+}
+
 object SocketServer : WebSocketServer(InetSocketAddress(8989)) {
 
     private val messageSubject = SerializedSubject(BehaviorSubject.create<String>())
-    private val connectSubject = SerializedSubject(BehaviorSubject.create<WebSocket.READYSTATE>())
+    private val connectSubject = SerializedSubject(BehaviorSubject.create<Pair<InetSocketAddress, SocketStatus>>())
 
     val messages = messageSubject.asObservable()
     val connects = connectSubject.asObservable()
@@ -24,11 +30,11 @@ object SocketServer : WebSocketServer(InetSocketAddress(8989)) {
     }
 
     override fun onOpen(webSocket: WebSocket?, handshake: ClientHandshake?) {
-        connectSubject.onNext(webSocket?.readyState)
+        connectSubject.onNext(webSocket!!.localSocketAddress to SocketStatus.OPEN)
     }
 
     override fun onClose(webSocket: WebSocket?, code: Int, reason: String?, remote: Boolean) {
-        connectSubject.onNext(webSocket?.readyState)
+        connectSubject.onNext(webSocket!!.localSocketAddress to SocketStatus.CLOSE)
     }
 
     override fun onMessage(webSocket: WebSocket?, message: String?) {
@@ -36,7 +42,7 @@ object SocketServer : WebSocketServer(InetSocketAddress(8989)) {
     }
 
     override fun onError(webSocket: WebSocket?, ex: Exception?) {
-        connectSubject.onNext(webSocket?.readyState)
+        connectSubject.onNext(webSocket!!.localSocketAddress to SocketStatus.ERROR)
     }
 
     fun send(message: String) {

@@ -7,6 +7,7 @@ import com.github.kittinunf.redux.devTools.util.addTo
 import com.github.kittinunf.redux.devTools.viewmodel.DevToolsTimeLineActionState
 import com.github.kittinunf.redux.devTools.viewmodel.DevToolsTimeLineViewModel
 import com.github.kittinunf.redux.devTools.viewmodel.DevToolsTimeLineViewModelCommand
+import com.google.gson.JsonParser
 import jiconfont.icons.FontAwesome
 import jiconfont.swing.IconFontSwing
 import rx.Observable
@@ -26,14 +27,23 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
     private val subscriptionBag = CompositeSubscription()
 
     init {
-        val resetCommand = SocketServer.messages.filter { it == "@@INIT" }.map { DevToolsTimeLineViewModelCommand.Reset(initialMaxValue) }
+        val resetCommand = SocketServer.messages.map { JsonParser().parse(it).asJsonObject }
+                .filter { it["type"].asString == InstrumentAction.ActionType.INIT.name }
+                .map { DevToolsTimeLineViewModelCommand.Reset(initialMaxValue) }
+
         val forwardCommand = component.forwardButtonDidPressed().map { DevToolsTimeLineViewModelCommand.Forward() }
+
         val backwardCommand = component.backwardButtonDidPressed().map { DevToolsTimeLineViewModelCommand.Backward() }
+
         val playOrPauseCommand = component.actionButtonDidPressed().map { DevToolsTimeLineViewModelCommand.PlayOrPause() }
+
         val setValueCommand = component.timeSliderValueDidChanged().map { DevToolsTimeLineViewModelCommand.SetToValue((it.source as JSlider).value) }
-        val adjustMaxAndSetToMaxCommand = SocketServer.messages.filter { it != "@@INIT" }.concatMap {
-            Observable.from(listOf(DevToolsTimeLineViewModelCommand.AdjustMax(), DevToolsTimeLineViewModelCommand.SetToMax()))
-        }
+
+        val adjustMaxAndSetToMaxCommand = SocketServer.messages.map { JsonParser().parse(it).asJsonObject }
+                .filter { it["type"].asString == InstrumentAction.ActionType.STATE.name }
+                .concatMap {
+                    Observable.from(listOf(DevToolsTimeLineViewModelCommand.AdjustMax(), DevToolsTimeLineViewModelCommand.SetToMax()))
+                }
 
         val viewModels = Observable.merge(resetCommand, forwardCommand, backwardCommand, playOrPauseCommand, setValueCommand, adjustMaxAndSetToMaxCommand)
                 .scan(DevToolsTimeLineViewModel(maxValue = initialMaxValue)) { viewModel, command ->
