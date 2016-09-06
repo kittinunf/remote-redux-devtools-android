@@ -1,6 +1,6 @@
 # Remote-Redux-Devtools-Android
 
-Remote Redux Devtools for Android on Android Studio - Intellij plugin & lib, it is heavily inspired by https://github.com/zalmoxisus/remote-redux-devtools
+Remote Redux Devtools for Android on Android Studio - Intellij plugin & lib, it is heavily inspired by [remote-redux-devtools](https://github.com/zalmoxisus/remote-redux-devtools)
 
 ## TLDR;
 ![](https://github.com/kittinunf/remote-redux-devtools-android/blob/master/assets/remote-redux-devtools.gif)
