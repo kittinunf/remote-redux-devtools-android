@@ -60,7 +60,7 @@ class Instrument<S>(options: InstrumentOption, val initialState: S) {
                     handleConnectionOpened()
                 }
 
-        client.connect()
+        client.connectBlocking()
     }
 
     fun handleStateChangeFromAction(state: S, action: Any) {

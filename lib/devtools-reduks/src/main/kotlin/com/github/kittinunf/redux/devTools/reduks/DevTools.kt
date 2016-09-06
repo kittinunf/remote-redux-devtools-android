@@ -45,7 +45,9 @@ fun <S> devTools(option: InstrumentOption = defaultOption()): StoreEnhancer<S> {
                             store.subscribe(storeSubscriber)
 
                     init {
-                        instrument.onMessageReceived = { store.dispatch(DevToolsStateChangeAction) }
+                        instrument.onMessageReceived = {
+                            store.dispatch(DevToolsStateChangeAction)
+                        }
                     }
 
                 }
