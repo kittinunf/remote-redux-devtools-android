@@ -2,6 +2,7 @@ package com.github.kittinunf.redux.devTools.socket
 
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
+import rx.Observable
 import rx.subjects.BehaviorSubject
 import rx.subjects.SerializedSubject
 import java.net.URI
@@ -21,8 +22,8 @@ class SocketClient(host: String = "localhost", port: Int = 8989) : WebSocketClie
     private val messageSubject = SerializedSubject(BehaviorSubject.create<String>())
     private val connectSubject = SerializedSubject(BehaviorSubject.create<SocketStatus>())
 
-    val messages = messageSubject.asObservable()
-    val connects = connectSubject.asObservable()
+    val messages: Observable<String> by lazy { messageSubject.asObservable() }
+    val connects: Observable<SocketStatus> by lazy { connectSubject.asObservable() }
 
     init {
     }

@@ -41,10 +41,6 @@ class DevToolsTest {
         val store = SimpleStore.Creator<CounterState>()
                 .create(counterReducer(), CounterState(), devTools<CounterState>())
 
-        store.subscribe {
-            println(store.state)
-        }
-
         store.dispatch(CounterAction.Init) // = 0
         store.dispatch(CounterAction.Increment) //+1
         store.dispatch(CounterAction.Decrement) //-1
@@ -52,6 +48,10 @@ class DevToolsTest {
         store.dispatch(CounterAction.Increment) //+1
         store.dispatch(CounterAction.Decrement) //-1
         store.dispatch(CounterAction.Increment) //+1
+
+        store.subscribe {
+            println(store.state)
+        }
 
         countdown.await()
     }

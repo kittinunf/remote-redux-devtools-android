@@ -2,7 +2,6 @@ package com.github.kittinunf.redux.devTools.controller
 
 import com.github.kittinunf.redux.devTools.action.InstrumentAction
 import com.github.kittinunf.redux.devTools.socket.SocketServer
-import com.github.kittinunf.redux.devTools.socket.SocketStatus
 import com.github.kittinunf.redux.devTools.ui.DevToolsPanelComponent
 import com.github.kittinunf.redux.devTools.util.addTo
 import com.github.kittinunf.redux.devTools.viewmodel.DevToolsStatusViewModel
@@ -28,7 +27,7 @@ class DevToolsStatusController(component: DevToolsPanelComponent) {
                 SocketServer.messages.map { JsonParser().parse(it).asJsonObject }
                         .filter { it["type"].asString == InstrumentAction.ActionType.INIT.name }
                         .map { DevToolsStatusViewModelCommand.SetStatus(it["payload"].asString) },
-                SocketServer.connects.filter { it.second == SocketStatus.CLOSE }
+                SocketServer.connects.filter { it.second == SocketServer.SocketStatus.CLOSE }
                         .map { DevToolsStatusViewModelCommand.SetStatus("-") }
         )
 

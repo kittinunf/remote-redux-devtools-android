@@ -65,14 +65,7 @@ class InstrumentTest {
     fun `add new state, must put current state to last`() {
         val instrument = Instrument(InstrumentOption("localhost", TEST_PORT, "TEST_CLIENT", 10), CounterState())
         instrument.start()
-
-        val count = CountDownLatch(1)
-        instrument.onConnectionOpened = {
-            instrument.handleStateChangeFromAction(CounterState(1), CounterAction.Increment)
-            count.countDown()
-        }
-        count.await(5, TimeUnit.SECONDS)
-
+        instrument.handleStateChangeFromAction(CounterState(1), CounterAction.Increment)
         assertThat(instrument.state.counter, isEqualTo(1))
         instrument.stop()
     }
@@ -82,13 +75,8 @@ class InstrumentTest {
         val instrument = Instrument(InstrumentOption("localhost", TEST_PORT, "TEST_CLIENT", 10), CounterState())
         instrument.start()
 
-        val count = CountDownLatch(1)
-        instrument.onConnectionOpened = {
-            instrument.handleStateChangeFromAction(CounterState(1), CounterAction.Increment)
-            instrument.handleStateChangeFromAction(CounterState(47), CounterAction.Increment)
-            count.countDown()
-        }
-        count.await(5, TimeUnit.SECONDS)
+        instrument.handleStateChangeFromAction(CounterState(1), CounterAction.Increment)
+        instrument.handleStateChangeFromAction(CounterState(47), CounterAction.Increment)
 
         assertThat(instrument.state.counter, isEqualTo(47))
         instrument.stop()
@@ -99,16 +87,10 @@ class InstrumentTest {
         val instrument = Instrument(InstrumentOption("localhost", TEST_PORT, "TEST_CLIENT", 10), CounterState())
         instrument.start()
 
-        val count = CountDownLatch(1)
-
-        instrument.onConnectionOpened = {
-            instrument.handleStateChangeFromAction(CounterState(1), CounterAction.Increment) //0
-            instrument.handleStateChangeFromAction(CounterState(8), CounterAction.Increment) //1
-            instrument.handleStateChangeFromAction(CounterState(4), CounterAction.Increment) //2
-            instrument.handleStateChangeFromAction(CounterState(47), CounterAction.Increment) //3
-            count.countDown()
-        }
-        count.await(5, TimeUnit.SECONDS)
+        instrument.handleStateChangeFromAction(CounterState(1), CounterAction.Increment) //0
+        instrument.handleStateChangeFromAction(CounterState(8), CounterAction.Increment) //1
+        instrument.handleStateChangeFromAction(CounterState(4), CounterAction.Increment) //2
+        instrument.handleStateChangeFromAction(CounterState(47), CounterAction.Increment) //3
 
         //first, state is equal to latest change
         assertThat(instrument.state.counter, isEqualTo(47))
