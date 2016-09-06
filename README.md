@@ -2,6 +2,9 @@
 
 Remote Redux Devtools for Android on Android Studio - Intellij plugin & lib
 
+## TLDR;
+![](https://github.com/kittinunf/remote-redux-devtools-android/blob/master/assets/remote-redux-devtools.gif)
+
 ## Installation
 
 ### There are 2 main components of remote-redux-devtools-android
