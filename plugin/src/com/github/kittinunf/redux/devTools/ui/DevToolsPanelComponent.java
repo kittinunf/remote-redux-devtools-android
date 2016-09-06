@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
+import java.awt.*;
 
 /**
  * Created by kittinunf on 8/16/16.
@@ -56,9 +57,9 @@ public class DevToolsPanelComponent {
     }
 
     private void setUpTimeLineUI() {
-        timeLineActionButton.setIcon(IconFontSwing.buildIcon(FontAwesome.PLAY, 18));
-        timeLineBackwardButton.setIcon(IconFontSwing.buildIcon(FontAwesome.ANGLE_LEFT, 30));
-        timeLineForwardButton.setIcon(IconFontSwing.buildIcon(FontAwesome.ANGLE_RIGHT, 30));
+        timeLineActionButton.setIcon(IconFontSwing.buildIcon(FontAwesome.PLAY, 18, Color.WHITE));
+        timeLineBackwardButton.setIcon(IconFontSwing.buildIcon(FontAwesome.ANGLE_LEFT, 30, Color.WHITE));
+        timeLineForwardButton.setIcon(IconFontSwing.buildIcon(FontAwesome.ANGLE_RIGHT, 30, Color.WHITE));
     }
 
 }

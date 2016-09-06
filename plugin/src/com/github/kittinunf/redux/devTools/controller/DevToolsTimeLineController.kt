@@ -13,6 +13,7 @@ import jiconfont.swing.IconFontSwing
 import rx.Observable
 import rx.schedulers.SwingScheduler
 import rx.subscriptions.CompositeSubscription
+import java.awt.Color
 import java.util.concurrent.TimeUnit
 import javax.swing.JSlider
 
@@ -45,7 +46,12 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
                     Observable.from(listOf(DevToolsTimeLineViewModelCommand.AdjustMax(), DevToolsTimeLineViewModelCommand.SetToMax()))
                 }
 
-        val viewModels = Observable.merge(resetCommand, forwardCommand, backwardCommand, playOrPauseCommand, setValueCommand, adjustMaxAndSetToMaxCommand)
+        val viewModels = Observable.merge(resetCommand,
+                forwardCommand,
+                backwardCommand,
+                playOrPauseCommand,
+                setValueCommand,
+                adjustMaxAndSetToMaxCommand)
                 .scan(DevToolsTimeLineViewModel(maxValue = initialMaxValue)) { viewModel, command ->
                     viewModel.executeCommand(command)
                 }
@@ -68,9 +74,10 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
 
         //play or pause
         viewModels.map { if (it.state == DevToolsTimeLineActionState.PLAY) FontAwesome.PAUSE else FontAwesome.PLAY }
+                .distinctUntilChanged()
                 .observeOn(SwingScheduler.getInstance())
                 .subscribe {
-                    component.timeLineActionButton.icon = IconFontSwing.buildIcon(it, 18.0f)
+                    component.timeLineActionButton.icon = IconFontSwing.buildIcon(it, 18.0f, Color.white)
                 }
                 .addTo(subscriptionBag)
 
@@ -86,12 +93,14 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
 
         //backward button
         viewModels.map { it.backwardEnabled }
+                .distinctUntilChanged()
                 .observeOn(SwingScheduler.getInstance())
                 .subscribe { component.timeLineBackwardButton.isEnabled = it }
                 .addTo(subscriptionBag)
 
         //forward button
         viewModels.map { it.forwardEnabled }
+                .distinctUntilChanged()
                 .observeOn(SwingScheduler.getInstance())
                 .subscribe { component.timeLineForwardButton.isEnabled = it }
                 .addTo(subscriptionBag)

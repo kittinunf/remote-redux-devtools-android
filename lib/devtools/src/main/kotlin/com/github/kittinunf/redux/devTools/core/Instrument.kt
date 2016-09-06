@@ -46,7 +46,6 @@ class Instrument<S>(options: InstrumentOption, val initialState: S) {
 
     fun start() {
         if (started) return
-        started = true
         isMonitored = true
 
         //handle message
@@ -60,10 +59,12 @@ class Instrument<S>(options: InstrumentOption, val initialState: S) {
                     handleConnectionOpened()
                 }
 
-        client.connectBlocking()
+        started = client.connectBlocking()
     }
 
     fun handleStateChangeFromAction(state: S, action: Any) {
+        if (!started) start()
+
         stateTimeLines.add(state)
         currentStateIndex = stateTimeLines.lastIndex
         val data = InstrumentAction.State(state.toString() to action.javaClass.simpleName)

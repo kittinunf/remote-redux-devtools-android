@@ -1,7 +1,7 @@
 <idea-plugin version="2">
   <id>com.github.kittinunf.redux.devTools.ReduxDevtools</id>
-  <name>Redux DevTools</name>
-  <version>1.0</version>
+  <name>Remote Redux DevTools</name>
+  <version>1.0.0.alpha4</version>
   <vendor email="kittinun.f@gmail.com" url="http://www.github.com/kittinunf">kittinunf</vendor>
 
   <description><![CDATA[
@@ -26,7 +26,7 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <!-- Add your extensions here -->
-    <toolWindow id="Redux DevTools" anchor="right" factoryClass="com.github.kittinunf.redux.devTools.controller.DevToolsWindowFactory"/>
+    <toolWindow id="Remote Redux DevTools" anchor="right" factoryClass="com.github.kittinunf.redux.devTools.controller.DevToolsWindowFactory"/>
   </extensions>
 
   <actions>
