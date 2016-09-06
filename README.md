@@ -1,4 +1,4 @@
-# remote-redux-devtools-android
+# Remote-Redux-Devtools-Android
 
 Remote Redux Devtools for Android on Android Studio - Intellij plugin & lib
 
@@ -17,7 +17,6 @@ Install via jitpack.io
 Choose redux-devtools for your desire Redux implementation, as of now we support [Reduks](https://github.com/beyondeye/Reduks). Other libraries will be coming soon.
 
 - [x] [Reduks](https://github.com/beyondeye/Reduks)
-- [] [redux-kotlin](https://github.com/pardom/redux-kotlin)
 
 ### Gradle
 ```Groovy
