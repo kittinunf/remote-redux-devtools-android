@@ -11,13 +11,13 @@ import java.net.InetSocketAddress
  * Created by kittinunf on 8/17/16.
  */
 
-enum class SocketStatus {
-    OPEN,
-    CLOSE,
-    ERROR
-}
-
 object SocketServer : WebSocketServer(InetSocketAddress(8989)) {
+
+    enum class SocketStatus {
+        OPEN,
+        CLOSE,
+        ERROR
+    }
 
     private val messageSubject = SerializedSubject(BehaviorSubject.create<String>())
     private val connectSubject = SerializedSubject(BehaviorSubject.create<Pair<InetSocketAddress, SocketStatus>>())

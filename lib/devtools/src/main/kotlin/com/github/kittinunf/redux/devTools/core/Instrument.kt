@@ -2,6 +2,7 @@ package com.github.kittinunf.redux.devTools.core
 
 import com.github.kittinunf.redux.devTools.socket.SocketClient
 import com.google.gson.JsonParser
+import rx.subscriptions.CompositeSubscription
 import java.util.*
 
 /**
@@ -26,6 +27,9 @@ class Instrument<S>(options: InstrumentOption, val initialState: S) {
 
     private val name: String
 
+    private val subscriptionBag = CompositeSubscription()
+
+    var onConnectionOpened: (() -> Unit)? = null
     var onMessageReceived: ((S) -> Unit)? = null
 
     //app's view state
@@ -45,11 +49,18 @@ class Instrument<S>(options: InstrumentOption, val initialState: S) {
         started = true
         isMonitored = true
 
-        client.messages.subscribe { handleMessageReceived(it) }
-        client.connectBlocking()
+        //handle message
+        client.messages.subscribe {
+            handleMessageReceived(it)
+        }
 
-        val message = InstrumentAction.Init(name).toJsonObject().toString()
-        client.send(message)
+        //handle connection
+        client.connects.filter { it == SocketClient.SocketStatus.OPEN }
+                .subscribe {
+                    handleConnectionOpened()
+                }
+
+        client.connect()
     }
 
     fun handleStateChangeFromAction(state: S, action: Any) {
@@ -63,6 +74,12 @@ class Instrument<S>(options: InstrumentOption, val initialState: S) {
         started = false
         isMonitored = false
         client.closeBlocking()
+    }
+
+    private fun handleConnectionOpened() {
+        val message = InstrumentAction.Init(name).toJsonObject().toString()
+        client.send(message)
+        onConnectionOpened?.invoke()
     }
 
     private fun handleMessageReceived(s: String) {

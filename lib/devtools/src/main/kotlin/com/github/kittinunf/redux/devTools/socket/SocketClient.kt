@@ -10,50 +10,37 @@ import java.net.URI
  * Created by kittinunf on 8/22/16.
  */
 
-class SocketClient(host: String = "localhost", port: Int = 8989) {
+class SocketClient(host: String = "localhost", port: Int = 8989) : WebSocketClient(URI("ws://$host:$port")) {
 
-    private val PATH = "ws://$host:$port"
-
-    private val client: WebSocketClient
+    enum class SocketStatus {
+        OPEN,
+        CLOSE,
+        ERROR
+    }
 
     private val messageSubject = SerializedSubject(BehaviorSubject.create<String>())
+    private val connectSubject = SerializedSubject(BehaviorSubject.create<SocketStatus>())
+
     val messages = messageSubject.asObservable()
+    val connects = connectSubject.asObservable()
 
     init {
-        client = object : WebSocketClient(URI(PATH)) {
-            override fun onOpen(handshake: ServerHandshake?) {
-            }
-
-            override fun onClose(code: Int, reason: String?, remote: Boolean) {
-            }
-
-            override fun onMessage(message: String?) {
-                messageSubject.onNext(message)
-            }
-
-            override fun onError(ex: Exception?) {
-            }
-        }
     }
 
-    fun connect() {
-        client.connect()
+    override fun onOpen(handshakedata: ServerHandshake?) {
+        connectSubject.onNext(SocketStatus.OPEN)
     }
 
-    fun connectBlocking() {
-        client.connectBlocking()
+    override fun onClose(code: Int, reason: String?, remote: Boolean) {
+        connectSubject.onNext(SocketStatus.CLOSE)
     }
 
-    fun send(msg: String) {
-        client.send(msg)
+    override fun onMessage(message: String?) {
+        messageSubject.onNext(message)
     }
 
-    fun close() {
-        client.close()
-    }
-
-    fun closeBlocking() {
-        client.closeBlocking()
+    override fun onError(ex: Exception?) {
+        connectSubject.onNext(SocketStatus.ERROR)
     }
 
 }

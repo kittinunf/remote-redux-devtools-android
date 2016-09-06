@@ -37,6 +37,7 @@ class DevToolsTest {
     @Test
     fun `apply devtools in to reduks store enhancer`() {
         val countdown = CountDownLatch(1)
+
         val store = SimpleStore.Creator<CounterState>()
                 .create(counterReducer(), CounterState(), devTools<CounterState>())
 
