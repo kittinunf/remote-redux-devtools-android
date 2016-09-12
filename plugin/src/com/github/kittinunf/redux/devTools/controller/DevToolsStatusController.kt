@@ -23,15 +23,15 @@ class DevToolsStatusController(component: DevToolsPanelComponent) {
         val setAddressCommand = Observable.fromCallable { "${SocketServer.address.hostString}:${SocketServer.address.port}" }
                 .map { DevToolsStatusViewModelCommand.SetAddress(it.toString()) }
 
-        val setStatusCommand = Observable.merge(
+        val setClientCommand = Observable.merge(
                 SocketServer.messages.map { JsonParser().parse(it).asJsonObject }
                         .filter { it["type"].asString == InstrumentAction.ActionType.INIT.name }
-                        .map { DevToolsStatusViewModelCommand.SetStatus(it["payload"].asString) },
+                        .map { DevToolsStatusViewModelCommand.SetClient(it["payload"].asString) },
                 SocketServer.connects.filter { it.second == SocketServer.SocketStatus.CLOSE }
-                        .map { DevToolsStatusViewModelCommand.SetStatus("-") }
+                        .map { DevToolsStatusViewModelCommand.SetClient("-") }
         )
 
-        val viewModels = Observable.merge(setAddressCommand, setStatusCommand)
+        val viewModels = Observable.merge(setAddressCommand, setClientCommand)
                 .scan(DevToolsStatusViewModel()) { viewModel, command ->
                     viewModel.executeCommand(command)
                 }
@@ -46,7 +46,7 @@ class DevToolsStatusController(component: DevToolsPanelComponent) {
         viewModels.map { it.status }
                 .observeOn(SwingScheduler.getInstance())
                 .subscribe {
-                    component.serverStatusLabel.text = it
+                    component.connectedClientLabel.text = it
                 }
                 .addTo(subscriptionBag)
     }

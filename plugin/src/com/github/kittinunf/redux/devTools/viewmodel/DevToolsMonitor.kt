@@ -10,6 +10,7 @@ sealed class DevToolsMonitorViewModelCommand {
 
     class SetItem(val items: List<InstrumentAction.State> = listOf()) : DevToolsMonitorViewModelCommand()
     class AddItem(val item: InstrumentAction.State) : DevToolsMonitorViewModelCommand()
+    class ShiftItem(val item: InstrumentAction.State) : DevToolsMonitorViewModelCommand()
 
 }
 
@@ -35,6 +36,13 @@ data class DevToolsMonitorViewModel(val change: ChangeOperation? = null, val ite
                 val newItems = items.toMutableList()
                 newItems.add(command.item)
                 return DevToolsMonitorViewModel(ChangeOperation.Insert(newItems.lastIndex), newItems)
+            }
+
+            is DevToolsMonitorViewModelCommand.ShiftItem -> {
+                val newItems = items.toMutableList()
+                newItems.removeAt(0)
+                newItems.add(command.item)
+                return DevToolsMonitorViewModel(null, newItems)
             }
         }
     }

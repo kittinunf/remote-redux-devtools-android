@@ -41,7 +41,11 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
         val setValueCommand = component.timeSliderValueDidChanged().map { DevToolsTimeLineViewModelCommand.SetToValue((it.source as JSlider).value) }
 
         val adjustMaxAndSetToMaxCommand = SocketServer.messages.map { JsonParser().parse(it).asJsonObject }
-                .filter { it["type"].asString == InstrumentAction.ActionType.STATE.name }
+                .filter {
+                    val isStateAction = it["type"].asString == InstrumentAction.ActionType.STATE.name
+                    val isOverMax = it["reach_max"].asBoolean
+                    isStateAction and !isOverMax
+                }
                 .concatMap {
                     Observable.from(listOf(DevToolsTimeLineViewModelCommand.AdjustMax(), DevToolsTimeLineViewModelCommand.SetToMax()))
                 }

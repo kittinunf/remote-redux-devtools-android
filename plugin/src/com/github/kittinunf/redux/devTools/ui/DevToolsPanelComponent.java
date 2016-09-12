@@ -18,7 +18,7 @@ public class DevToolsPanelComponent {
     public JPanel devToolsPanel;
 
     public JLabel serverAddressLabel;
-    public JLabel serverStatusLabel;
+    public JLabel connectedClientLabel;
 
     public JTree monitorStateTree;
 

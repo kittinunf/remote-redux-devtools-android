@@ -21,17 +21,24 @@ sealed class InstrumentAction(open val type: String, open val payload: Any? = nu
 
     abstract protected fun buildJson(): JsonObject.() -> Unit
 
-    class State(override val payload: Pair<String, String>) : InstrumentAction(type = ActionType.STATE.name) {
+    data class StatePayload(val state: String, val action: String, val reachMax: Boolean = false)
+
+    class State(override val payload: StatePayload) : InstrumentAction(type = ActionType.STATE.name) {
 
         constructor(json: JsonObject) : this(
-                json["payload"].asJsonObject["state"].asString to json["payload"].asJsonObject["action"].asString
+                StatePayload(
+                        json["payload"].asJsonObject["state"].asString,
+                        json["payload"].asJsonObject["action"].asString,
+                        json["payload"].asJsonObject["reach_max"].asBoolean
+                )
         )
 
         override fun buildJson(): JsonObject.() -> Unit {
             return {
                 add("payload", JsonObject().apply {
-                    addProperty("state", payload.first)
-                    addProperty("action", payload.second)
+                    addProperty("state", payload.state)
+                    addProperty("action", payload.action)
+                    addProperty("reach_max", payload.reachMax)
                 })
             }
         }

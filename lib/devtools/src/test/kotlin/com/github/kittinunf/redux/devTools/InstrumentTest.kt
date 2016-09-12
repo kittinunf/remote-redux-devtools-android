@@ -58,6 +58,7 @@ class InstrumentTest {
 
     sealed class CounterAction() {
         object Increment
+        object Decrement
     }
 
 
@@ -89,7 +90,7 @@ class InstrumentTest {
 
         instrument.handleStateChangeFromAction(CounterState(1), CounterAction.Increment) //0
         instrument.handleStateChangeFromAction(CounterState(8), CounterAction.Increment) //1
-        instrument.handleStateChangeFromAction(CounterState(4), CounterAction.Increment) //2
+        instrument.handleStateChangeFromAction(CounterState(4), CounterAction.Decrement) //2
         instrument.handleStateChangeFromAction(CounterState(47), CounterAction.Increment) //3
 
         //first, state is equal to latest change
@@ -122,6 +123,49 @@ class InstrumentTest {
         val count = CountDownLatch(1)
         run()
         count.await(l, TimeUnit.SECONDS)
+    }
+
+    @Test
+    fun `state is shifted when the max age config is reached`() {
+        val instrument = Instrument(InstrumentOption("localhost", TEST_PORT, "TEST_CLIENT", 5), CounterState())
+
+        instrument.start()
+
+        instrument.handleStateChangeFromAction(CounterState(1), CounterAction.Increment) //0
+        instrument.handleStateChangeFromAction(CounterState(8), CounterAction.Increment) //1
+        instrument.handleStateChangeFromAction(CounterState(4), CounterAction.Decrement) //2
+        instrument.handleStateChangeFromAction(CounterState(47), CounterAction.Increment) //3
+        instrument.handleStateChangeFromAction(CounterState(16), CounterAction.Decrement) //4
+
+        //first, state is equal to latest change
+        assertThat(instrument.state.counter, isEqualTo(16))
+
+        callThenWaitInSecond(2) {
+            mockSocketServer.connections().first().send(InstrumentAction.JumpToState(0).toJsonObject().toString())
+        }
+        //at 0 index, counter is equal to 1
+        assertThat(instrument.state.counter, isEqualTo(1))
+
+        //the oldest one gets remove
+        instrument.handleStateChangeFromAction(CounterState(27), CounterAction.Increment) //5
+        callThenWaitInSecond(2) {
+            mockSocketServer.connections().first().send(InstrumentAction.JumpToState(0).toJsonObject().toString())
+        }
+        assertThat(instrument.state.counter, isEqualTo(8))
+
+        //again, the oldest one gets remove
+        instrument.handleStateChangeFromAction(CounterState(3), CounterAction.Decrement) //6
+        callThenWaitInSecond(2) {
+            mockSocketServer.connections().first().send(InstrumentAction.JumpToState(0).toJsonObject().toString())
+        }
+        assertThat(instrument.state.counter, isEqualTo(4))
+
+        //again, the oldest one gets remove
+        instrument.handleStateChangeFromAction(CounterState(10), CounterAction.Increment) //7
+        callThenWaitInSecond(2) {
+            mockSocketServer.connections().first().send(InstrumentAction.JumpToState(0).toJsonObject().toString())
+        }
+        assertThat(instrument.state.counter, isEqualTo(47))
     }
 
 }

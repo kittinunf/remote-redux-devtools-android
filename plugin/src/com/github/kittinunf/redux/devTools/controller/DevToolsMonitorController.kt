@@ -11,6 +11,7 @@ import com.google.gson.JsonParser
 import rx.Observable
 import rx.schedulers.SwingScheduler
 import rx.subscriptions.CompositeSubscription
+import java.awt.Rectangle
 import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeModel
 
@@ -31,7 +32,11 @@ class DevToolsMonitorController(component: DevToolsPanelComponent) {
                 .filter { it["type"].asString == InstrumentAction.ActionType.STATE.name }
                 .map {
                     val state = InstrumentAction.State(it)
-                    DevToolsMonitorViewModelCommand.AddItem(state)
+                    if (state.payload.reachMax) {
+                        DevToolsMonitorViewModelCommand.ShiftItem(state)
+                    } else {
+                        DevToolsMonitorViewModelCommand.AddItem(state)
+                    }
                 }
 
         val viewModels = Observable.merge(resetItemsCommand, addItemsCommand)
@@ -56,6 +61,8 @@ class DevToolsMonitorController(component: DevToolsPanelComponent) {
                             is ChangeOperation.Insert -> {
                                 val newNode = nodes[change.index].makeNode()
                                 model.insertNodeInto(newNode, rootNode, rootNode.childCount)
+                                val y = component.monitorStateTree.preferredSize.height
+                                component.monitorStateTree.scrollRectToVisible(Rectangle(0, y, 0, 0))
                             }
                         }
                     }
@@ -67,8 +74,8 @@ class DevToolsMonitorController(component: DevToolsPanelComponent) {
 }
 
 fun InstrumentAction.State.makeNode(): DefaultMutableTreeNode {
-    return DefaultMutableTreeNode(payload.second).apply {
-        val leaf = DefaultMutableTreeNode(payload.first)
+    return DefaultMutableTreeNode(payload.action).apply {
+        val leaf = DefaultMutableTreeNode(payload.state)
         add(leaf)
     }
 }

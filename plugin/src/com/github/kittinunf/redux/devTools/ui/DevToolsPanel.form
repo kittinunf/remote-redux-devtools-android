@@ -33,7 +33,7 @@
               <text value="Instance: "/>
             </properties>
           </component>
-          <component id="372a7" class="javax.swing.JLabel" binding="serverStatusLabel">
+          <component id="372a7" class="javax.swing.JLabel" binding="connectedClientLabel">
             <constraints>
               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>

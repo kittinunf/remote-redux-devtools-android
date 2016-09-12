@@ -13,7 +13,7 @@ data class InstrumentOption(val host: String, val port: Int, val name: String, v
 
 fun defaultOption() = InstrumentOption("localhost", 8989, UUID.randomUUID().toString(), 30)
 
-class Instrument<S>(options: InstrumentOption, val initialState: S) {
+class Instrument<S>(val options: InstrumentOption, val initialState: S) {
 
     var isMonitored = false
 
@@ -24,8 +24,6 @@ class Instrument<S>(options: InstrumentOption, val initialState: S) {
     private val client: SocketClient
 
     private val stateTimeLines = mutableListOf<S>()
-
-    private val name: String
 
     private val subscriptionBag = CompositeSubscription()
 
@@ -41,7 +39,6 @@ class Instrument<S>(options: InstrumentOption, val initialState: S) {
 
     init {
         client = SocketClient(options.host, options.port)
-        name = options.name
     }
 
     fun start() {
@@ -66,8 +63,14 @@ class Instrument<S>(options: InstrumentOption, val initialState: S) {
         if (!started) start()
 
         stateTimeLines.add(state)
+        val isOverMaxAgeReached = stateTimeLines.size > options.maxAge
+        if (isOverMaxAgeReached) {
+            stateTimeLines.removeAt(0)
+        }
         currentStateIndex = stateTimeLines.lastIndex
-        val data = InstrumentAction.State(state.toString() to action.javaClass.simpleName)
+        val data = InstrumentAction.State(
+                InstrumentAction.StatePayload(state.toString(), action.javaClass.simpleName, isOverMaxAgeReached)
+        )
         client.send(data.toJsonObject().toString())
     }
 
@@ -78,7 +81,7 @@ class Instrument<S>(options: InstrumentOption, val initialState: S) {
     }
 
     private fun handleConnectionOpened() {
-        val message = InstrumentAction.Init(name).toJsonObject().toString()
+        val message = InstrumentAction.Init(options.name).toJsonObject().toString()
         client.send(message)
         onConnectionOpened?.invoke()
     }

@@ -7,7 +7,7 @@ package com.github.kittinunf.redux.devTools.viewmodel
 sealed class DevToolsStatusViewModelCommand {
 
     class SetAddress(val address: String) : DevToolsStatusViewModelCommand()
-    class SetStatus(val status: String) : DevToolsStatusViewModelCommand()
+    class SetClient(val status: String) : DevToolsStatusViewModelCommand()
 
 }
 
@@ -19,7 +19,7 @@ data class DevToolsStatusViewModel(val address: String = "", val status: String 
                 return this.copy(address = command.address)
             }
 
-            is DevToolsStatusViewModelCommand.SetStatus -> {
+            is DevToolsStatusViewModelCommand.SetClient -> {
                 return this.copy(status = command.status)
             }
         }
