@@ -43,7 +43,9 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
         val adjustMaxAndSetToMaxCommand = SocketServer.messages.map { JsonParser().parse(it).asJsonObject }
                 .filter {
                     val isStateAction = it["type"].asString == InstrumentAction.ActionType.STATE.name
-                    val isOverMax = it["reach_max"].asBoolean
+                    val isOverMax = if (isStateAction) {
+                        it["payload"].asJsonObject["reach_max"].asBoolean
+                    } else false
                     isStateAction and !isOverMax
                 }
                 .concatMap {
