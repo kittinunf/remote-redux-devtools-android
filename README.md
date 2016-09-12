@@ -28,6 +28,6 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 dependencies {
-    compile 'com.github.kittinunf.remote-redux-devtools-android:devtools-reduks:1.0.0.alpha5' //for reduks support
+    compile 'com.github.kittinunf.remote-redux-devtools-android:devtools-reduks:1.0.0.alpha6' //for reduks support
 }
 ```
