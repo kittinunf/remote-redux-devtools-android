@@ -1,13 +1,34 @@
 package com.github.kittinunf.redux.devTools.redux_kotlin
 
+import com.github.kittinunf.redux.devTools.core.InstrumentOption
+import com.github.kittinunf.redux.devTools.socket.MockSocketServer
 import org.hamcrest.MatcherAssert.assertThat
+import org.junit.AfterClass
+import org.junit.BeforeClass
 import org.junit.Test
 import redux.api.Reducer
 import redux.createStore
+import java.util.*
 import java.util.concurrent.CountDownLatch
 import org.hamcrest.CoreMatchers.`is` as isEqualTo
 
 class ReduxKotlinDevToolsTest {
+
+    companion object {
+
+        val mockSocketServer = MockSocketServer(9898)
+
+        @BeforeClass @JvmStatic
+        fun once() {
+            mockSocketServer.start()
+        }
+
+        @AfterClass @JvmStatic
+        fun destroy() {
+            mockSocketServer.stop()
+        }
+
+    }
 
     data class CounterState(val count: Int = 0)
 
@@ -30,11 +51,13 @@ class ReduxKotlinDevToolsTest {
         }
     }
 
+    fun testInstrumentOption() = InstrumentOption("localhost", 9898, UUID.randomUUID().toString(), 30)
+
     @Test
     fun `apply devtools in to redux-kotlin store enhancer`() {
         val countdown = CountDownLatch(1)
 
-        val store = createStore(counterReducer(), CounterState(), devTools<CounterState>())
+        val store = createStore(counterReducer(), CounterState(), devTools<CounterState>(testInstrumentOption()))
 
         var count = 0
         store.subscribe {

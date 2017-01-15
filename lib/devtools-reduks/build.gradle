@@ -10,12 +10,10 @@ repositories {
 
 dependencies {
     compile project(':devtools')
-
     compile 'com.github.beyondeye.reduks:reduks-core:2.0.0b6'
 
+    testCompile project(':test-utils')
     testCompile "junit:junit:$junitVersion"
-    testCompile "org.java-websocket:Java-WebSocket:$javaWebsocketVersion"
-
 }
 
 sourceCompatibility = "1.6"

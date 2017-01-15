@@ -10,9 +10,9 @@ repositories {
 
 dependencies {
     compile project(':devtools')
-
     compile 'com.github.pardom.redux-kotlin:lib:1.1.0'
 
+    testCompile project(':test-utils')
     testCompile "junit:junit:$junitVersion"
 }
 

@@ -1,1 +1,1 @@
-include ':sample', ':devtools', ':devtools-reduks', ':devtools-redux-kotlin'
+include ':sample', ':devtools', ':devtools-reduks', ':devtools-redux-kotlin', ':test-utils'
