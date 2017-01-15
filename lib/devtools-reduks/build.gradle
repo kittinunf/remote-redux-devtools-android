@@ -14,6 +14,8 @@ dependencies {
     compile 'com.github.beyondeye.reduks:reduks-core:2.0.0b6'
 
     testCompile "junit:junit:$junitVersion"
+    testCompile "org.java-websocket:Java-WebSocket:$javaWebsocketVersion"
+
 }
 
 sourceCompatibility = "1.6"
