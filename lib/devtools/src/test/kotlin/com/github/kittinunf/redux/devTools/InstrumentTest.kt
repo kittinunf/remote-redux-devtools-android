@@ -15,10 +15,6 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import org.hamcrest.CoreMatchers.`is` as isEqualTo
 
-/**
- * Created by kittinunf on 8/28/16.
- */
-
 class InstrumentTest {
 
     companion object {

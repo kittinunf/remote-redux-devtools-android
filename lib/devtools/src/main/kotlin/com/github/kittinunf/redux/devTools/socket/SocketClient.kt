@@ -7,10 +7,6 @@ import rx.subjects.BehaviorSubject
 import rx.subjects.SerializedSubject
 import java.net.URI
 
-/**
- * Created by kittinunf on 8/22/16.
- */
-
 class SocketClient(host: String = "localhost", port: Int = 8989) : WebSocketClient(URI("ws://$host:$port")) {
 
     enum class SocketStatus {

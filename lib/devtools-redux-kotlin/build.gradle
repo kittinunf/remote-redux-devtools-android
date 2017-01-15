@@ -13,7 +13,7 @@ dependencies {
 
     compile 'com.github.pardom.redux-kotlin:lib:1.1.0'
 
-    testCompile "junit:junit:$junit_version"
+    testCompile "junit:junit:$junitVersion"
 }
 
 sourceCompatibility = "1.6"

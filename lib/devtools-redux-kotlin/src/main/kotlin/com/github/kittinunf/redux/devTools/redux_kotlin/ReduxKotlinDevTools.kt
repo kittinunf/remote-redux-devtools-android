@@ -44,11 +44,7 @@ fun <S> devTools(option: InstrumentOption = defaultOption()): Store.Enhancer<S> 
                         store.dispatch(DevToolsStateChangeAction)
                     }
                 }
-
             }
         }
-
     }
 }
-
-
