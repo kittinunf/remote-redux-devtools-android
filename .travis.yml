@@ -7,8 +7,10 @@ cache:
   directories:
     - $HOME/.gradle
 
-script:
+before_script:
   - cd lib
-  - ./gradlew devtools:test --info
-  - ./gradlew devtools-reduks:test --info
-  - ./gradlew devtools-redux-kotlin:test --info
+
+script:
+  - ./gradlew :devtools:test --info
+  - ./gradlew :devtools-reduks:test --info
+  - ./gradlew :devtools-redux-kotlin:test --info
