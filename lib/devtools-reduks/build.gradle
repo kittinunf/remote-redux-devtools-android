@@ -10,10 +10,10 @@ repositories {
 
 dependencies {
     compile project(':devtools')
-
     compile 'com.github.beyondeye.reduks:reduks-core:2.0.0b6'
 
-    testCompile "junit:junit:$junit_version"
+    testCompile project(':test-utils')
+    testCompile "junit:junit:$junitVersion"
 }
 
 sourceCompatibility = "1.6"

@@ -5,12 +5,12 @@ apply plugin: 'maven'
 group = 'com.github.kittinunf.redux'
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile "org.java-websocket:Java-WebSocket:$java_websocket_version"
-    compile "io.reactivex:rxjava:$rxjava_version"
-    compile "com.google.code.gson:gson:$gson_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    compile "org.java-websocket:Java-WebSocket:$javaWebsocketVersion"
+    compile "io.reactivex:rxjava:$rxjavaVersion"
+    compile "com.google.code.gson:gson:$gsonVersion"
 
-    testCompile "junit:junit:$junit_version"
+    testCompile "junit:junit:$junitVersion"
 }
 
 sourceCompatibility = "1.6"

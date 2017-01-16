@@ -5,10 +5,6 @@ import com.google.gson.JsonParser
 import rx.subscriptions.CompositeSubscription
 import java.util.*
 
-/**
- * Created by kittinunf on 8/26/16.
- */
-
 data class InstrumentOption(val host: String, val port: Int, val name: String, val maxAge: Int)
 
 fun defaultOption() = InstrumentOption("localhost", 8989, UUID.randomUUID().toString(), 30)
@@ -21,14 +17,14 @@ class Instrument<S>(val options: InstrumentOption, val initialState: S) {
 
     private var currentStateIndex = -1
 
-    private val client: SocketClient
+    private val client: SocketClient = SocketClient(options.host, options.port)
 
     private val stateTimeLines = mutableListOf<S>()
 
-    private val subscriptionBag = CompositeSubscription()
-
     var onConnectionOpened: (() -> Unit)? = null
     var onMessageReceived: ((S) -> Unit)? = null
+
+    val subscriptions = CompositeSubscription()
 
     //app's view state
     var state: S = initialState
@@ -37,24 +33,20 @@ class Instrument<S>(val options: InstrumentOption, val initialState: S) {
             return stateTimeLines.getOrNull(currentStateIndex) ?: initialState
         }
 
-    init {
-        client = SocketClient(options.host, options.port)
-    }
-
     fun start() {
         if (started) return
         isMonitored = true
 
         //handle message
-        client.messages.subscribe {
+        subscriptions.add(client.messages.subscribe {
             handleMessageReceived(it)
-        }
+        })
 
         //handle connection
-        client.connects.filter { it == SocketClient.SocketStatus.OPEN }
+        subscriptions.add(client.connects.filter { it == SocketClient.SocketStatus.OPEN }
                 .subscribe {
                     handleConnectionOpened()
-                }
+                })
 
         started = client.connectBlocking()
     }
@@ -77,6 +69,7 @@ class Instrument<S>(val options: InstrumentOption, val initialState: S) {
     fun stop() {
         started = false
         isMonitored = false
+        subscriptions.unsubscribe()
         client.closeBlocking()
     }
 

@@ -5,10 +5,6 @@ import com.github.kittinunf.redux.devTools.core.Instrument
 import com.github.kittinunf.redux.devTools.core.InstrumentOption
 import com.github.kittinunf.redux.devTools.core.defaultOption
 
-/**
- * Created by kittinunf on 8/25/16.
- */
-
 object DevToolsStateChangeAction
 
 fun <S> devTools(option: InstrumentOption = defaultOption()): StoreEnhancer<S> {
@@ -31,9 +27,9 @@ fun <S> devTools(option: InstrumentOption = defaultOption()): StoreEnhancer<S> {
                 })
                 return object : Store<S> {
 
-                    override var dispatch: (Any) -> Any = {}
-                        get() = store.dispatch
+                    override var dispatch: (Any) -> Any = store.dispatch
 
+                    //this need to be computed variable so state will get only copy of `instrument.state`
                     override val state: S
                         get() = instrument.state
 
@@ -49,7 +45,6 @@ fun <S> devTools(option: InstrumentOption = defaultOption()): StoreEnhancer<S> {
                             store.dispatch(DevToolsStateChangeAction)
                         }
                     }
-
                 }
             }
         }
