@@ -1,2 +1,3 @@
 include ':plugin'
-include ':lib'
+include ':lib:devtools'
+include ':lib:test-utils'

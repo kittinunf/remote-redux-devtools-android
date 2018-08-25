@@ -7,6 +7,11 @@
         <option name="BUILDABLE" value="false" />
       </configuration>
     </facet>
+    <facet type="android-gradle" name="Android-Gradle">
+      <configuration>
+        <option name="GRADLE_PROJECT_PATH" value=":lib" />
+      </configuration>
+    </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_6">
     <output url="file://$MODULE_DIR$/../../../lib/out/production/classes" />
@@ -14,6 +19,7 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../../lib">
       <excludeFolder url="file://$MODULE_DIR$/../../../lib/.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/../../../lib/build" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

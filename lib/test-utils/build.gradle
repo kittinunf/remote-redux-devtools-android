@@ -1,8 +1,12 @@
+repositories {
+    jcenter()
+}
+
 apply plugin: 'kotlin'
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    compile "org.java-websocket:Java-WebSocket:$javaWebsocketVersion"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$rootProject.ext.kotlinVersion"
+    compile "org.java-websocket:Java-WebSocket:$rootProject.ext.javaWebsocketVersion"
 }
 
 sourceCompatibility = "1.6"

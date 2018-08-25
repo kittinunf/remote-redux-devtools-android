@@ -15,7 +15,7 @@ sealed class InstrumentAction(open val type: String, open val payload: Any? = nu
         buildJson()()
     }
 
-    abstract protected fun buildJson(): JsonObject.() -> Unit
+    protected abstract fun buildJson(): JsonObject.() -> Unit
 
     data class StatePayload(val state: String, val action: String, val reachMax: Boolean = false)
 
