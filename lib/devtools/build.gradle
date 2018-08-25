@@ -8,7 +8,7 @@ apply plugin: 'maven'
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$rootProject.ext.kotlinVersion"
     compile "org.java-websocket:Java-WebSocket:$rootProject.ext.javaWebsocketVersion"
-    compile "io.reactivex:rxjava:$rootProject.ext.rxjavaVersion"
+    compile "io.reactivex:rxjava:$rootProject.ext.rxJavaVersion"
     compile "com.google.code.gson:gson:$rootProject.ext.gsonVersion"
 
     testCompile project(':lib:test-utils')

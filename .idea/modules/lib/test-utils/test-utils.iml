@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.id=":lib:test-utils" external.linked.project.path="$MODULE_DIR$/../../../../lib/test-utils" external.root.project.path="$MODULE_DIR$/../../../.." external.system.id="GRADLE" external.system.module.group="remote-redux-devtools-android.lib" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
+<module external.linked.project.id=":lib:test-utils" external.linked.project.path="$MODULE_DIR$/../../../../lib/test-utils" external.root.project.path="$MODULE_DIR$/../../../.." external.system.id="GRADLE" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="android-gradle" name="Android-Gradle">
       <configuration>
@@ -50,12 +50,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.2.60" level="project" />
-    <orderEntry type="library" name="Gradle: org.java-websocket:Java-WebSocket:1.3.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.2.60" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
     <orderEntry type="library" exported="" name="kotlin-stdlib-1.2.60" level="project" />
-    <orderEntry type="library" exported="" name="Java-WebSocket-1.3.0" level="project" />
+    <orderEntry type="library" exported="" name="Java-WebSocket-1.3.9" level="project" />
     <orderEntry type="library" exported="" name="kotlin-stdlib-common-1.2.60" level="project" />
     <orderEntry type="library" exported="" name="annotations-13.0" level="project" />
   </component>
