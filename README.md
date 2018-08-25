@@ -17,10 +17,6 @@ You could download zip file contain plugin at [release](https://github.com/kitti
 ### Library
 Install via jitpack.io
 
-Choose redux-devtools for your desire Redux implementation, as of now we support [Reduks](https://github.com/beyondeye/Reduks). Other libraries will be coming soon.
-
-- [x] [Reduks](https://github.com/beyondeye/Reduks)
-
 ### Gradle
 ```Groovy
 repositories {
@@ -28,6 +24,5 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 dependencies {
-    compile 'com.github.kittinunf.remote-redux-devtools-android:devtools-reduks:1.0.0.alpha6' //for reduks support
 }
 ```
