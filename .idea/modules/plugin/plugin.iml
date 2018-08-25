@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.linked.project.id=":plugin" external.linked.project.path="$MODULE_DIR$/../../../plugin" external.root.project.path="$MODULE_DIR$/../../.." external.system.id="GRADLE" external.system.module.group="com.github.kittinunf.remote-redux-devtools" external.system.module.version="0.0.1" type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="android-gradle" name="Android-Gradle">
+      <configuration>
+        <option name="GRADLE_PROJECT_PATH" value=":plugin" />
+      </configuration>
+    </facet>
+    <facet type="java-gradle" name="Java-Gradle">
+      <configuration>
+        <option name="BUILD_FOLDER_PATH" value="$MODULE_DIR$/../../../plugin/build" />
+        <option name="BUILDABLE" value="true" />
+      </configuration>
+    </facet>
+    <facet type="kotlin-language" name="Kotlin">
+      <configuration version="3" platform="JVM 1.6" useProjectSettings="false">
+        <compilerSettings />
+        <compilerArguments>
+          <option name="destination" value="$MODULE_DIR$/../../../plugin/build/classes/kotlin/main" />
+          <option name="noStdlib" value="true" />
+          <option name="noReflect" value="true" />
+          <option name="moduleName" value="plugin" />
+          <option name="addCompilerBuiltIns" value="true" />
+          <option name="loadBuiltInsFromDependencies" value="true" />
+          <option name="languageVersion" value="1.2" />
+          <option name="apiVersion" value="1.1" />
+          <option name="pluginOptions">
+            <array />
+          </option>
+          <option name="pluginClasspaths">
+            <array />
+          </option>
+        </compilerArguments>
+      </configuration>
+    </facet>
+  </component>
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
+    <output url="file://$MODULE_DIR$/../../../plugin/build/classes/java/main" />
+    <output-test url="file://$MODULE_DIR$/../../../plugin/build/classes/java/test" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../../plugin">
+      <sourceFolder url="file://$MODULE_DIR$/../../../plugin/src/main/kotlin" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../plugin/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../plugin/src/main/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../plugin/src/test/kotlin" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../plugin/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../plugin/src/test/resources" type="java-test-resource" />
+      <excludeFolder url="file://$MODULE_DIR$/../../../plugin/.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/../../../plugin/build" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Gradle: com.github.jiconfont:jiconfont-font_awesome:4.7.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.jiconfont:jiconfont-swing:1.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: io.reactivex:rxswing:0.27.0" level="project" />
+    <orderEntry type="library" name="Gradle: io.reactivex:rxjava:1.3.7" level="project" />
+    <orderEntry type="library" name="Gradle: org.java-websocket:Java-WebSocket:1.3.9" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:xbean:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:swingx-core-1.6.2:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:netty-all-4.1.6.Final.Patched:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:commons-logging-1.2:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:oromatcher:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:sqlite-jdbc-3.8.11.2:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:bcprov-jdk15on-155:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:coverage-instrumenter:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:guava-19.0:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:xmlrpc-2.0:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:jgoodies-forms:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:pty4j-0.7.1:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:trang-core:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:annotations:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:idea_rt:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:junit-4.12:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:picocontainer:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:jgoodies-looks-2.4.2:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:protobuf-2.5.0:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:coverage-agent:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:resolver:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:resources_en:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:xml-apis-ext:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:jcip-annotations:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:fluent-hc-4.5.2:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:velocity:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:jsch.agentproxy.pageant:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:commons-httpclient-3.1-patched:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:markdownj-core-0.4.2-SNAPSHOT:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:jsch.agentproxy.usocket-nc:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:kotlin-reflect:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:jps-launcher:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:log4j:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:automaton:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:cglib-nodep-3.2.4:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:bootstrap:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:javac2:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:external-system-rt:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:xstream-1.4.8:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:jsch.agentproxy.usocket-jna:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:proxy-vole_20131209:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:httpclient-4.5.2:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:jdkAnnotations:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:commons-codec-1.9:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:jsr173_1.0_api:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:commons-compress-1.10:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:jimfs-1.1:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:cli-parser-1.1:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:streamex-0.6.2:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:jayatana-1.2.4:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:sherpa-solver:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:kotlin-runtime:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:isorelax:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:jaxen-1.1.3:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:xpp3-1.1.4-min:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:sanselan-0.98-snapshot:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:snakeyaml-1.17:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:coverage-util:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:jps-builders-6:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:resources:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:winp-1.23:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:jsch.agentproxy.sshagent:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:snappy-in-java-0.5.1:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:jps-model:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:jsr305:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:microba:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:jsch.agentproxy.core:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:jps-builders:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:xml-apis:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:miglayout-core-5.0:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:xercesImpl:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:hamcrest-core-1.3:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:jh:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:asm-5.0.3:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:ecj-4.6.2:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:jing:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:trove4j:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:asm-analysis-5.0.3:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:icons:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:jsch.agentproxy.connector-factory:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:junit:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:jsch-0.1.54:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:nekohtml-1.9.14:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:httpcore-4.4.5:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:jgoodies-common-1.2.1:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:batik-all:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:serviceMessages:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:imgscalr-lib-4.2:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:jediterm-pty-2.5:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:commons-net-3.3:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:slf4j-log4j12-1.7.10:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:asm-all:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:extensions:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:jna:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:gson-2.5:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:optimizedFileManager:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:xmlgraphics-commons-1.5:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:forms_rt:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:idea:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:util:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:httpmime-4.5.2:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:miglayout-swing-5.0:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:rngom-20051226-patched:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:openapi:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:groovy-all-2.4.6:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:purejavacomm:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:boot:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:nanoxml-2.2.3:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:slf4j-api-1.7.10:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:jna-platform:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:jdom:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.jetbrains:asm-tree-5.0.3:2017.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:GoogleFeedback:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:layoutlib:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:sdk-common:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:dexlib2-2.0.8-dev:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:freemarker-2.3.20:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:jsr305-1.3.9:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:pixalprobe:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:android-common:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:antlr4-runtime-4.5.3:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:manifest-merger:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:resources_en:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:adt-ui:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:android:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:gluegen-rt-natives-macosx-universal:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:constraint-layout:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:juniversalchardet-1.0.3:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:builder-model-2.2.0-alpha6:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:androidAnnotations:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:jarutils:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:commons-compress-1.8.1:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:sdk-tools:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:commons-io-2.4:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:bcpkix-jdk15on-155:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:analytics-protos:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:layoutlib-loader:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:spantable:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:dexlib2-util-2.0.8-dev:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:gluegen-rt-natives-linux-amd64:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:jogl-all-natives-linux-i586:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:gluegen-rt-natives-windows-i586:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:data-binding:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:jogl-all:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:asm-5.0.3:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:javawriter-2.2.1:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:gluegen-rt-natives-linux-i586:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:asm-analysis-5.0.3:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:jgraphx-3.4.0.1:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:analytics-shared:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:jogl-all-natives-linux-amd64:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:sdklib:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:gluegen-rt:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:jogl-all-natives-macosx-universal:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:libwebp:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:lombok-ast-0.2.3:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:repository:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:kxml2-2.3.0:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:jogl-all-natives-windows-i586:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:android-rt:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:common:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:layoutlib-api:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:gluegen-rt-natives-windows-amd64:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:analytics-tracker:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:jogl-all-natives-windows-amd64:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.plugins:asm-tree-5.0.3:ideaIC-2017.1-withSources" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.jiconfont:jiconfont:1.0.0" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: tools" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: junit:junit:4.12" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.hamcrest:hamcrest-core:1.3" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: tools" level="project" />
+    <orderEntry type="library" exported="" name="jiconfont-font_awesome-4.7.0.0" level="project" />
+    <orderEntry type="library" exported="" name="jiconfont-swing-1.0.0" level="project" />
+    <orderEntry type="library" exported="" name="rxswing-0.27.0" level="project" />
+    <orderEntry type="library" exported="" name="rxjava-1.3.7" level="project" />
+    <orderEntry type="library" exported="" name="Java-WebSocket-1.3.9" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="xbean" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="swingx-core-1.6.2" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="netty-all-4.1.6.Final.Patched" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="commons-logging-1.2" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="oromatcher" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="sqlite-jdbc-3.8.11.2" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="bcprov-jdk15on-155" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="coverage-instrumenter" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="guava-19.0" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="xmlrpc-2.0" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jgoodies-forms" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="pty4j-0.7.1" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="trang-core" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="annotations" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="idea_rt" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="junit-4.12" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="picocontainer" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jgoodies-looks-2.4.2" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="protobuf-2.5.0" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="coverage-agent" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="resolver" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="resources_en" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="xml-apis-ext" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jcip-annotations" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="fluent-hc-4.5.2" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="velocity" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jsch.agentproxy.pageant" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="commons-httpclient-3.1-patched" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="markdownj-core-0.4.2-SNAPSHOT" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jsch.agentproxy.usocket-nc" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="kotlin-reflect" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jps-launcher" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="log4j" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="automaton" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="cglib-nodep-3.2.4" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="bootstrap" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="javac2" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="external-system-rt" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="xstream-1.4.8" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jsch.agentproxy.usocket-jna" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="proxy-vole_20131209" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="httpclient-4.5.2" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jdkAnnotations" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="commons-codec-1.9" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jsr173_1.0_api" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="commons-compress-1.10" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jimfs-1.1" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="cli-parser-1.1" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="streamex-0.6.2" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jayatana-1.2.4" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="sherpa-solver" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="kotlin-runtime" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="isorelax" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jaxen-1.1.3" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="xpp3-1.1.4-min" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="sanselan-0.98-snapshot" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="snakeyaml-1.17" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="coverage-util" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jps-builders-6" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="resources" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="winp-1.23" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jsch.agentproxy.sshagent" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="snappy-in-java-0.5.1" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jps-model" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jsr305" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="microba" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jsch.agentproxy.core" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jps-builders" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="xml-apis" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="miglayout-core-5.0" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="xercesImpl" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="hamcrest-core-1.3" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jh" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="asm-5.0.3" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="ecj-4.6.2" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jing" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="trove4j" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="asm-analysis-5.0.3" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="icons" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jsch.agentproxy.connector-factory" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="junit" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jsch-0.1.54" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="nekohtml-1.9.14" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="httpcore-4.4.5" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jgoodies-common-1.2.1" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="batik-all" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="serviceMessages" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="imgscalr-lib-4.2" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jediterm-pty-2.5" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="commons-net-3.3" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="slf4j-log4j12-1.7.10" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="asm-all" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="extensions" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jna" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="gson-2.5" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="optimizedFileManager" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="xmlgraphics-commons-1.5" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="forms_rt" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="idea" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="util" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="httpmime-4.5.2" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="miglayout-swing-5.0" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="rngom-20051226-patched" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="openapi" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="groovy-all-2.4.6" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="purejavacomm" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="boot" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="nanoxml-2.2.3" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="slf4j-api-1.7.10" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jna-platform" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jdom" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="asm-tree-5.0.3" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="GoogleFeedback" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="layoutlib" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="sdk-common" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="dexlib2-2.0.8-dev" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="freemarker-2.3.20" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jsr305-1.3.9" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="pixalprobe" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="android-common" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="antlr4-runtime-4.5.3" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="manifest-merger" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="adt-ui" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="android" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="gluegen-rt-natives-macosx-universal" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="constraint-layout" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="juniversalchardet-1.0.3" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="builder-model-2.2.0-alpha6" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="androidAnnotations" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jarutils" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="commons-compress-1.8.1" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="sdk-tools" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="commons-io-2.4" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="bcpkix-jdk15on-155" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="analytics-protos" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="layoutlib-loader" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="spantable" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="dexlib2-util-2.0.8-dev" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="gluegen-rt-natives-linux-amd64" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jogl-all-natives-linux-i586" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="gluegen-rt-natives-windows-i586" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="data-binding" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jogl-all" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="javawriter-2.2.1" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="gluegen-rt-natives-linux-i586" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jgraphx-3.4.0.1" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="analytics-shared" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jogl-all-natives-linux-amd64" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="sdklib" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="gluegen-rt" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jogl-all-natives-macosx-universal" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="libwebp" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="lombok-ast-0.2.3" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="repository" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="kxml2-2.3.0" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jogl-all-natives-windows-i586" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="android-rt" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="common" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="layoutlib-api" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="gluegen-rt-natives-windows-amd64" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="analytics-tracker" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="jogl-all-natives-windows-amd64" level="project" />
+    <orderEntry type="library" exported="" name="jiconfont-1.0.0" level="project" />
+    <orderEntry type="library" exported="" scope="RUNTIME" name="tools" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="junit-4.12" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="hamcrest-core-1.3" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="tools" level="project" />
+    <orderEntry type="library" exported="" name="plugin.plugin-0.0.1" level="project" />
+    <orderEntry type="library" exported="" name="plugin.plugin-0.0.1" level="project" />
+    <orderEntry type="library" exported="" name="plugin.plugin-0.0.1" level="project" />
+    <orderEntry type="library" exported="" name="plugin.plugin-0.0.1" level="project" />
+    <orderEntry type="library" exported="" name="plugin.plugin-0.0.1" level="project" />
+    <orderEntry type="library" exported="" name="plugin.plugin-0.0.1" level="project" />
+    <orderEntry type="library" exported="" name="plugin.plugin-0.0.1" level="project" />
+    <orderEntry type="library" exported="" name="plugin.plugin-0.0.1" level="project" />
+  </component>
+</module>

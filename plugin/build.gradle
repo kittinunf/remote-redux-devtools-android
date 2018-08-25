@@ -1,0 +1,29 @@
+apply plugin: 'java'
+apply plugin: 'kotlin'
+apply plugin: 'org.jetbrains.intellij'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+intellij {
+    version '2017.1'
+    pluginName 'Remote Redux Devtools'
+    plugins 'android'
+    updateSinceUntilBuild false
+}
+
+dependencies {
+    compile "com.github.jiconfont:jiconfont-font_awesome:4.7.0.0"
+    compile "com.github.jiconfont:jiconfont-swing:1.0.0"
+    compile "io.reactivex:rxjava:1.3.7"
+    compile "io.reactivex:rxswing:0.27.0"
+    compile "org.java-websocket:Java-WebSocket:1.3.9"
+
+    testCompile "junit:junit:4.12"
+}
+
+group 'com.github.kittinunf.remote-redux-devtools'
+version '0.0.1'
