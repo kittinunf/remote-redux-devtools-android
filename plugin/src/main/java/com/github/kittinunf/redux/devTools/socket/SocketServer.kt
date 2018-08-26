@@ -28,20 +28,20 @@ object SocketServer : WebSocketServer(InetSocketAddress(8989)) {
     override fun onStart() {
     }
 
-    override fun onOpen(webSocket: WebSocket?, handshake: ClientHandshake?) {
-        connectSubject.onNext(webSocket!!.localSocketAddress to SocketStatus.OPEN)
+    override fun onOpen(webSocket: WebSocket, handshake: ClientHandshake?) {
+        connectSubject.onNext(webSocket.localSocketAddress to SocketStatus.OPEN)
     }
 
-    override fun onClose(webSocket: WebSocket?, code: Int, reason: String?, remote: Boolean) {
-        connectSubject.onNext(webSocket!!.localSocketAddress to SocketStatus.CLOSE)
+    override fun onClose(webSocket: WebSocket, code: Int, reason: String?, remote: Boolean) {
+        connectSubject.onNext(webSocket.localSocketAddress to SocketStatus.CLOSE)
     }
 
-    override fun onMessage(webSocket: WebSocket?, message: String?) {
+    override fun onMessage(webSocket: WebSocket, message: String?) {
         messageSubject.onNext(message)
     }
 
-    override fun onError(webSocket: WebSocket?, ex: Exception?) {
-        connectSubject.onNext(webSocket!!.localSocketAddress to SocketStatus.ERROR)
+    override fun onError(webSocket: WebSocket, ex: Exception?) {
+        connectSubject.onNext(webSocket.localSocketAddress to SocketStatus.ERROR)
     }
 
     fun send(message: String) {

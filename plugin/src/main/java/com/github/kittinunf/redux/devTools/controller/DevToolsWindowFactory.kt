@@ -8,16 +8,14 @@ import com.intellij.ui.content.ContentFactory
 
 class DevToolsWindowFactory : ToolWindowFactory {
 
-    val component: DevToolsPanelComponent
+    private val component: DevToolsPanelComponent = DevToolsPanelComponent()
 
-    val statusController: DevToolsStatusController
-    val monitorController: DevToolsMonitorController
-    val timeLineController: DevToolsTimeLineController
+    private val statusController: DevToolsStatusController
+    private val monitorController: DevToolsMonitorController
+    private val timeLineController: DevToolsTimeLineController
 
     init {
         //base
-        component = DevToolsPanelComponent()
-
         statusController = DevToolsStatusController(component)
         monitorController = DevToolsMonitorController(component)
         timeLineController = DevToolsTimeLineController(component)

@@ -21,6 +21,4 @@ before_script:
   - cd lib
 
 script:
-  - ./gradlew :devtools:test --info
-  - ./gradlew :devtools-reduks:test --info
-  - ./gradlew :devtools-redux-kotlin:test --info
+  - ./gradlew :lib:devtools:build
