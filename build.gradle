@@ -1,12 +1,19 @@
-buildscript { 
+buildscript {
     ext {
+        // common
         kotlinVersion = '1.2.60'
-
-        rxJavaVersion = '1.3.8'
-        javaWebsocketVersion = '1.3.9'
-        gsonVersion = '2.7'
-
         junitVersion = '4.12'
+        javaWebsocketVersion = '1.3.9'
+        rxJava2Version = '2.2.1'
+
+        // plugin
+        rxJavaVersion = '1.3.8'
+        rxJavaSwingVersion = '0.27.0'
+        jiconFontVersion = '4.7.0.0'
+        jiconFontSwingVersion = '1.0.0'
+
+        // lib
+        gsonVersion = '2.7'
     }
 
     repositories {

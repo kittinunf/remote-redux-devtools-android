@@ -1,10 +1,9 @@
 package com.github.kittinunf.redux.devTools.socket
 
+import io.reactivex.Observable
+import io.reactivex.subjects.BehaviorSubject
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
-import rx.Observable
-import rx.subjects.BehaviorSubject
-import rx.subjects.SerializedSubject
 import java.net.URI
 
 sealed class SocketStatus {
@@ -13,16 +12,14 @@ sealed class SocketStatus {
     class Error(val ex: Exception?) : SocketStatus()
 }
 
-class SocketClient(host: String = "localhost", port: Int = 8989) : WebSocketClient(URI("ws://$host:$port")) {
+class SocketClient(host: String = "localhost", port: Int = 8989) :
+        WebSocketClient(URI("ws://$host:$port")) {
 
-    private val messageSubject = SerializedSubject(BehaviorSubject.create<String>())
-    private val connectSubject = SerializedSubject(BehaviorSubject.create<SocketStatus>())
+    private val messageSubject = BehaviorSubject.create<String>().toSerialized()
+    private val connectSubject = BehaviorSubject.create<SocketStatus>().toSerialized()
 
-    val messages: Observable<String> by lazy { messageSubject.asObservable() }
-    val connections: Observable<SocketStatus> by lazy { connectSubject.asObservable() }
-
-    init {
-    }
+    val messages: Observable<String> = messageSubject.hide()
+    val connections: Observable<SocketStatus> = connectSubject.hide()
 
     override fun onOpen(handshakedata: ServerHandshake?) {
         connectSubject.onNext(SocketStatus.Open(handshakedata))
@@ -33,7 +30,7 @@ class SocketClient(host: String = "localhost", port: Int = 8989) : WebSocketClie
     }
 
     override fun onMessage(message: String?) {
-        messageSubject.onNext(message)
+        messageSubject.onNext(message ?: "")
     }
 
     override fun onError(ex: Exception?) {

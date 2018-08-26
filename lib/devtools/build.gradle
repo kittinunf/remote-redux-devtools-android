@@ -6,13 +6,13 @@ apply plugin: 'kotlin'
 apply plugin: 'maven'
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$rootProject.ext.kotlinVersion"
-    compile "org.java-websocket:Java-WebSocket:$rootProject.ext.javaWebsocketVersion"
-    compile "io.reactivex:rxjava:$rootProject.ext.rxJavaVersion"
-    compile "com.google.code.gson:gson:$rootProject.ext.gsonVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$rootProject.ext.kotlinVersion"
+    implementation "org.java-websocket:Java-WebSocket:$rootProject.ext.javaWebsocketVersion"
+    implementation "io.reactivex.rxjava2:rxjava:$rootProject.ext.rxJava2Version"
+    implementation "com.google.code.gson:gson:$rootProject.ext.gsonVersion"
 
-    testCompile project(':lib:test-utils')
-    testCompile "junit:junit:$rootProject.ext.junitVersion"
+    testImplementation project(':lib:test-utils')
+    testImplementation "junit:junit:$rootProject.ext.junitVersion"
 }
 
 sourceCompatibility = "1.6"

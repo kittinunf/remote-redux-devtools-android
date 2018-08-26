@@ -5,8 +5,8 @@ repositories {
 apply plugin: 'kotlin'
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$rootProject.ext.kotlinVersion"
-    compile "org.java-websocket:Java-WebSocket:$rootProject.ext.javaWebsocketVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$rootProject.ext.kotlinVersion"
+    implementation "org.java-websocket:Java-WebSocket:$rootProject.ext.javaWebsocketVersion"
 }
 
 sourceCompatibility = "1.6"

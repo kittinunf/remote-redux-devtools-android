@@ -3,7 +3,7 @@ package com.github.kittinunf.redux.devTools.core
 import com.github.kittinunf.redux.devTools.socket.SocketClient
 import com.github.kittinunf.redux.devTools.socket.SocketStatus
 import com.google.gson.JsonParser
-import rx.subscriptions.CompositeSubscription
+import io.reactivex.disposables.CompositeDisposable
 import java.util.UUID
 
 data class InstrumentOption(val host: String, val port: Int, val name: String, val maxAge: Int)
@@ -26,7 +26,7 @@ class Instrument<S>(private val options: InstrumentOption, private val initialSt
     var onConnectionOpened: (() -> Unit)? = null
     var onMessageReceived: ((S) -> Unit)? = null
 
-    private val subscriptions = CompositeSubscription()
+    private val subscriptions = CompositeDisposable()
 
     //app's view state
     var state: S = initialState
@@ -80,7 +80,7 @@ class Instrument<S>(private val options: InstrumentOption, private val initialSt
     fun stop() {
         started = false
         isMonitored = false
-        subscriptions.unsubscribe()
+        subscriptions.clear()
         client.closeBlocking()
     }
 
