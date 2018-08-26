@@ -25,7 +25,11 @@ interface Middleware<S : State> {
 
 interface StoreType<S : State> {
 
+    val initialState: S
+
     val states: Observable<S>
+
+    var replaceReducer: (S, Action) -> S
 
     fun dispatch(action: Action)
 
@@ -37,12 +41,12 @@ interface StoreType<S : State> {
 }
 
 class Store<S : State>(
-        initialState: S,
+        override val initialState: S,
         reducer: Reducer<S>,
         defaultScheduler: Scheduler = Schedulers.single()
 ) : StoreType<S> {
 
-    object NoAction : Action
+    object INIT : Action
 
     private val actionSubject = PublishSubject.create<Action>()
 
@@ -50,12 +54,16 @@ class Store<S : State>(
 
     private val middlewares = mutableListOf<Middleware<S>>()
 
+    // be default, this is doing nothing, just passing reduced state through
+    override var replaceReducer: (S, Action) -> S = { reducedState, _ -> reducedState }
+
     init {
         states = actionSubject
-                .scan(initialState to NoAction as Action) { (state, _), action ->
+                .scan(initialState to INIT as Action) { (state, _), action ->
                     middlewares.onEach { it.performBeforeReducingState(state, action) }
-                    val next = reducer.reduce(state, action)
-                    next to action
+                    val reducedState = reducer.reduce(state, action)
+                    val nextState = replaceReducer(reducedState, action)
+                    nextState to action
                 }
                 .doAfterNext { next ->
                     val (nextState, latestAction) = next

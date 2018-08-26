@@ -7,29 +7,29 @@ import rx.subjects.BehaviorSubject
 import rx.subjects.SerializedSubject
 import java.net.URI
 
-class SocketClient(host: String = "localhost", port: Int = 8989) : WebSocketClient(URI("ws://$host:$port")) {
+sealed class SocketStatus {
+    class Open(val handshakedata: ServerHandshake?) : SocketStatus()
+    class Close(val code: Int, val reason: String?) : SocketStatus()
+    class Error(val ex: Exception?) : SocketStatus()
+}
 
-    enum class SocketStatus {
-        OPEN,
-        CLOSE,
-        ERROR
-    }
+class SocketClient(host: String = "localhost", port: Int = 8989) : WebSocketClient(URI("ws://$host:$port")) {
 
     private val messageSubject = SerializedSubject(BehaviorSubject.create<String>())
     private val connectSubject = SerializedSubject(BehaviorSubject.create<SocketStatus>())
 
     val messages: Observable<String> by lazy { messageSubject.asObservable() }
-    val connects: Observable<SocketStatus> by lazy { connectSubject.asObservable() }
+    val connections: Observable<SocketStatus> by lazy { connectSubject.asObservable() }
 
     init {
     }
 
     override fun onOpen(handshakedata: ServerHandshake?) {
-        connectSubject.onNext(SocketStatus.OPEN)
+        connectSubject.onNext(SocketStatus.Open(handshakedata))
     }
 
     override fun onClose(code: Int, reason: String?, remote: Boolean) {
-        connectSubject.onNext(SocketStatus.CLOSE)
+        connectSubject.onNext(SocketStatus.Close(code, reason))
     }
 
     override fun onMessage(message: String?) {
@@ -37,7 +37,7 @@ class SocketClient(host: String = "localhost", port: Int = 8989) : WebSocketClie
     }
 
     override fun onError(ex: Exception?) {
-        connectSubject.onNext(SocketStatus.ERROR)
+        connectSubject.onNext(SocketStatus.Error(ex))
     }
 
 }

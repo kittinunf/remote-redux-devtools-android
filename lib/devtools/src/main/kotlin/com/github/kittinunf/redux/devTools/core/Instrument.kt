@@ -1,15 +1,17 @@
 package com.github.kittinunf.redux.devTools.core
 
 import com.github.kittinunf.redux.devTools.socket.SocketClient
+import com.github.kittinunf.redux.devTools.socket.SocketStatus
 import com.google.gson.JsonParser
 import rx.subscriptions.CompositeSubscription
-import java.util.*
+import java.util.UUID
 
 data class InstrumentOption(val host: String, val port: Int, val name: String, val maxAge: Int)
 
-fun defaultOption() = InstrumentOption("localhost", 8989, UUID.randomUUID().toString(), 30)
+fun localHostDefaultOption() = InstrumentOption("localhost", 8989, UUID.randomUUID().toString(), 30)
+fun emulatorDefaultOption() = InstrumentOption("10.0.2.2", 8989, UUID.randomUUID().toString(), 30)
 
-class Instrument<S>(val options: InstrumentOption, val initialState: S) {
+class Instrument<S>(private val options: InstrumentOption, private val initialState: S) {
 
     var isMonitored = false
 
@@ -24,7 +26,7 @@ class Instrument<S>(val options: InstrumentOption, val initialState: S) {
     var onConnectionOpened: (() -> Unit)? = null
     var onMessageReceived: ((S) -> Unit)? = null
 
-    val subscriptions = CompositeSubscription()
+    private val subscriptions = CompositeSubscription()
 
     //app's view state
     var state: S = initialState
@@ -43,16 +45,25 @@ class Instrument<S>(val options: InstrumentOption, val initialState: S) {
         })
 
         //handle connection
-        subscriptions.add(client.connects.filter { it == SocketClient.SocketStatus.OPEN }
+        subscriptions.add(client.connections.filter { it is SocketStatus.Open }
                 .subscribe {
+                    started = true
                     handleConnectionOpened()
                 })
 
-        started = client.connectBlocking()
+        subscriptions.add(client.connections.filter { it is SocketStatus.Error }
+                .subscribe {
+                    throw (it as SocketStatus.Error).ex ?: error("Socket Status Error")
+                }
+        )
     }
 
+    fun connect() = client.connect()
+
+    fun connectBlocking() = client.connectBlocking()
+
     fun handleStateChangeFromAction(state: S, action: Any) {
-        if (!started) start()
+        if (!started) return
 
         stateTimeLines.add(state)
         val isOverMaxAgeReached = stateTimeLines.size > options.maxAge

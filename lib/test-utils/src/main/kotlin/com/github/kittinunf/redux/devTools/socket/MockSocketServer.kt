@@ -11,6 +11,10 @@ class MockSocketServer(port: Int) : WebSocketServer(InetSocketAddress(port)) {
         println("open: ${handshake?.resourceDescriptor}")
     }
 
+    override fun onStart() {
+        print("start:")
+    }
+
     override fun onClose(conn: WebSocket?, code: Int, reason: String?, remote: Boolean) {
         println("close: $code, $reason")
     }
