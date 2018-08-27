@@ -18,7 +18,6 @@ cache:
     - $HOME/.gradle
 
 before_script:
-  - cd lib
 
 script:
   - ./gradlew :lib:devtools:build
