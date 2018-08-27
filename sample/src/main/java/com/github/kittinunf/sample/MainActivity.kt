@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity
 import com.github.kittinunf.redux.devTools.core.Instrument
 import com.github.kittinunf.redux.devTools.core.emulatorDefaultOption
 import com.github.kittinunf.sample.redux.Action
-import com.github.kittinunf.sample.redux.Middleware
 import com.github.kittinunf.sample.redux.Reducer
 import com.github.kittinunf.sample.redux.State
 import com.github.kittinunf.sample.redux.Store
@@ -45,27 +44,24 @@ class DevToolsStore<S : State>(private val store: StoreType<S>) : StoreType<S> b
             Instrument(emulatorDefaultOption(), store.initialState).apply {
                 start()
                 connectBlocking()
+                //send the first state
+                handleStateChangeFromAction(store.initialState, Store.INIT)
                 onMessageReceived = {
                     store.dispatch(DevToolsStateChangeAction)
                 }
             }
 
     init {
-        store.addMiddleware(object : Middleware<S> {
-            override fun performAfterReducingState(action: Action, nextState: S) {
-                // we do not record the first state
-                if (instrument.isMonitored && action !is DevToolsStateChangeAction) {
-                    // record organic state change
-                    instrument.handleStateChangeFromAction(nextState, action)
-                }
-            }
-        })
-
         //modify replaceReducer so we can inject state from the Devtools
         store.replaceReducer = { reducedState, action ->
             if (action is DevToolsStateChangeAction) {
                 instrument.state
-            } else reducedState
+            } else {
+                if (instrument.isMonitored) {
+                    instrument.handleStateChangeFromAction(reducedState, action)
+                }
+                reducedState
+            }
         }
     }
 }
