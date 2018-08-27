@@ -3,6 +3,7 @@ repositories {
     maven {
         url "https://maven.google.com"
     }
+    maven { url "https://jitpack.io" }
 }
 
 apply plugin: 'com.android.application'
@@ -37,7 +38,7 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation "io.reactivex.rxjava2:rxjava:$rootProject.ext.rxJava2Version"
 
-    implementation project(':lib:devtools')
+    implementation 'com.github.kittinunf:remote-redux-devtools-android:1.0.0.alpha7'
 
     testImplementation "junit:junit:$rootProject.ext.junitVersion"
 }

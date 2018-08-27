@@ -23,7 +23,7 @@ sourceSets {
     test.java.srcDirs += 'src/test/kotlin'
 }
 
-group = 'com.github.kittinunf.redux'
+group = 'com.github.kittinunf.remote-redux-devtools'
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'

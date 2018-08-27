@@ -26,4 +26,4 @@ dependencies {
 }
 
 group 'com.github.kittinunf.remote-redux-devtools'
-version '0.0.1'
+version rootProject.ext.publishVersion

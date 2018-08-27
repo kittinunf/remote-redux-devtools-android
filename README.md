@@ -20,9 +20,11 @@ Install via jitpack.io
 ### Gradle
 ```Groovy
 repositories {
-    jcenter()
-    maven { url "https://jitpack.io" }
+  jcenter()
+  maven { url "https://jitpack.io" }
 }
+
 dependencies {
+  implementation 'com.github.kittinunf:remote-redux-devtools-android:1.0.0.alpha7'
 }
 ```
