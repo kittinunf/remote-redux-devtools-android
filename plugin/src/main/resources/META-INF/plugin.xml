@@ -1,0 +1,33 @@
+<idea-plugin>
+    <id>com.github.kittinunf.redux.devTools.ReduxDevtools</id>
+    <name>Remote Redux DevTools</name>
+    <version>1.0.0.alpha7</version>
+    <vendor email="kittinun.f@gmail.com" url="http://www.github.com/kittinunf">kittinunf</vendor>
+
+    <description><![CDATA[
+      Enter short description for your plugin here.<br>
+      <em>most HTML tags may be used</em>
+    ]]></description>
+
+    <change-notes>
+    </change-notes>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="171.0"/>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.lang</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow
+            anchor="right"
+            factoryClass="com.github.kittinunf.redux.devTools.ui.DevToolsWindowFactory"
+            id="Remote Redux DevTools"
+        />
+    </extensions>
+
+    <actions>
+    </actions>
+
+</idea-plugin>

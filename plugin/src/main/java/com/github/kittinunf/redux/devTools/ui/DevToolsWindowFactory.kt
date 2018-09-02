@@ -1,6 +1,8 @@
-package com.github.kittinunf.redux.devTools.controller
+package com.github.kittinunf.redux.devTools.ui
 
-import com.github.kittinunf.redux.devTools.ui.DevToolsPanelComponent
+import com.github.kittinunf.redux.devTools.controller.DevToolsMonitorController
+import com.github.kittinunf.redux.devTools.controller.DevToolsStatusController
+import com.github.kittinunf.redux.devTools.controller.DevToolsTimeLineController
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory

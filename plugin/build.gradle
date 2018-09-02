@@ -9,21 +9,14 @@ apply plugin: 'org.jetbrains.intellij'
 sourceCompatibility = 1.8
 
 intellij {
-    version '2017.1'
+    version 'IC-2017.1'
     pluginName 'Remote Redux Devtools'
-    plugins 'android'
-    updateSinceUntilBuild false
 }
 
 dependencies {
-    implementation "com.github.jiconfont:jiconfont-font_awesome:$rootProject.ext.jiconFontVersion"
-    implementation "com.github.jiconfont:jiconfont-swing:$rootProject.ext.jiconFontSwingVersion"
-    implementation "io.reactivex:rxjava:$rootProject.ext.rxJavaVersion"
-    implementation "io.reactivex:rxswing:$rootProject.ext.rxJavaSwingVersion"
-    implementation "org.java-websocket:Java-WebSocket:$rootProject.ext.javaWebsocketVersion"
+    compile "io.reactivex:rxjava:$rootProject.ext.rxJavaVersion"
+    compile "io.reactivex:rxswing:$rootProject.ext.rxJavaSwingVersion"
+    compile "org.java-websocket:Java-WebSocket:$rootProject.ext.javaWebsocketVersion"
 
-    testImplementation "junit:junit:$rootProject.ext.junitVersion"
+    testCompile "junit:junit:$rootProject.ext.junitVersion"
 }
-
-group 'com.github.kittinunf.remote-redux-devtools'
-version rootProject.ext.publishVersion

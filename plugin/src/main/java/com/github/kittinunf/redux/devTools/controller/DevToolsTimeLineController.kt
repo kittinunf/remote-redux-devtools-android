@@ -2,19 +2,21 @@ package com.github.kittinunf.redux.devTools.controller
 
 import com.github.kittinunf.redux.devTools.action.InstrumentAction
 import com.github.kittinunf.redux.devTools.socket.SocketServer
-import com.github.kittinunf.redux.devTools.ui.*
+import com.github.kittinunf.redux.devTools.ui.DevToolsPanelComponent
+import com.github.kittinunf.redux.devTools.ui.actionButtonDidPressed
+import com.github.kittinunf.redux.devTools.ui.backwardButtonDidPressed
+import com.github.kittinunf.redux.devTools.ui.forwardButtonDidPressed
+import com.github.kittinunf.redux.devTools.ui.timeSliderValueDidChanged
 import com.github.kittinunf.redux.devTools.util.addTo
 import com.github.kittinunf.redux.devTools.viewmodel.DevToolsTimeLineActionState
 import com.github.kittinunf.redux.devTools.viewmodel.DevToolsTimeLineViewModel
 import com.github.kittinunf.redux.devTools.viewmodel.DevToolsTimeLineViewModelCommand
 import com.google.gson.JsonParser
-import jiconfont.icons.FontAwesome
-import jiconfont.swing.IconFontSwing
 import rx.Observable
 import rx.schedulers.SwingScheduler
 import rx.subscriptions.CompositeSubscription
-import java.awt.Color
 import java.util.concurrent.TimeUnit
+import javax.swing.ImageIcon
 import javax.swing.JSlider
 
 class DevToolsTimeLineController(component: DevToolsPanelComponent) {
@@ -61,7 +63,7 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
                 .autoConnect()
 
         component.actionButtonDidPressed()
-                .withLatestFrom(viewModels.map { it.state }) { actionEvent, state -> state }
+                .withLatestFrom(viewModels.map { it.state }) { _, state -> state }
                 //from pause state
                 .filter { it == DevToolsTimeLineActionState.PAUSE }
                 .subscribe {
@@ -75,11 +77,11 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
                 .addTo(subscriptionBag)
 
         //play or pause
-        viewModels.map { if (it.state == DevToolsTimeLineActionState.PLAY) FontAwesome.PAUSE else FontAwesome.PLAY }
+        viewModels.map { if (it.state == DevToolsTimeLineActionState.PLAY) "/images/ic_play.png" else "/images/ic_pause.png" }
                 .distinctUntilChanged()
                 .observeOn(SwingScheduler.getInstance())
                 .subscribe {
-                    component.timeLineActionButton.icon = IconFontSwing.buildIcon(it, 18.0f, Color.white)
+                    component.timeLineActionButton.icon = ImageIcon(javaClass.getResource(it))
                 }
                 .addTo(subscriptionBag)
 
@@ -117,5 +119,4 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
                 }
                 .addTo(subscriptionBag)
     }
-
 }

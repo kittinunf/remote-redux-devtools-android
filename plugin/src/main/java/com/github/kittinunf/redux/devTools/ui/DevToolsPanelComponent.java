@@ -1,13 +1,15 @@
 package com.github.kittinunf.redux.devTools.ui;
 
-import jiconfont.icons.FontAwesome;
-import jiconfont.swing.IconFontSwing;
-
-import javax.swing.*;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
-import java.awt.*;
 
 public class DevToolsPanelComponent {
 
@@ -24,8 +26,6 @@ public class DevToolsPanelComponent {
     public JButton timeLineForwardButton;
 
     public DevToolsPanelComponent() {
-        IconFontSwing.register(FontAwesome.getIconFont());
-
         setUpMonitorUI();
         setUpTimeLineUI();
     }
@@ -53,9 +53,9 @@ public class DevToolsPanelComponent {
     }
 
     private void setUpTimeLineUI() {
-        timeLineActionButton.setIcon(IconFontSwing.buildIcon(FontAwesome.PLAY, 18, Color.WHITE));
-        timeLineBackwardButton.setIcon(IconFontSwing.buildIcon(FontAwesome.ANGLE_LEFT, 30, Color.WHITE));
-        timeLineForwardButton.setIcon(IconFontSwing.buildIcon(FontAwesome.ANGLE_RIGHT, 30, Color.WHITE));
+        timeLineActionButton.setIcon(new ImageIcon(getClass().getResource("/images/ic_play.png")));
+        timeLineBackwardButton.setIcon(new ImageIcon(getClass().getResource("/images/ic_backward.png")));
+        timeLineForwardButton.setIcon(new ImageIcon(getClass().getResource("/images/ic_forward.png")));
     }
 
 }
