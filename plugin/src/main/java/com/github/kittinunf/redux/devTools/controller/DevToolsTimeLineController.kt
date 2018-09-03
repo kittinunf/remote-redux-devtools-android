@@ -1,6 +1,7 @@
 package com.github.kittinunf.redux.devTools.controller
 
 import com.github.kittinunf.redux.devTools.action.InstrumentAction
+import com.github.kittinunf.redux.devTools.action.JumpToStateInstrumentAction
 import com.github.kittinunf.redux.devTools.socket.SocketServer
 import com.github.kittinunf.redux.devTools.ui.DevToolsPanelComponent
 import com.github.kittinunf.redux.devTools.ui.actionButtonDidPressed
@@ -114,7 +115,7 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
                 .map { it.value }
                 .distinctUntilChanged()
                 .subscribe {
-                    val json = InstrumentAction.JumpToState(it).toJsonObject()
+                    val json = JumpToStateInstrumentAction(it).toJsonObject()
                     SocketServer.send(json.toString())
                 }
                 .addTo(subscriptionBag)

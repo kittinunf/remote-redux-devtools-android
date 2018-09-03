@@ -1,6 +1,7 @@
 package com.github.kittinunf.redux.devTools.action
 
 import com.google.gson.JsonObject
+import java.util.Date
 
 sealed class InstrumentAction(open val type: String, open val payload: Any? = null) {
 
@@ -16,51 +17,49 @@ sealed class InstrumentAction(open val type: String, open val payload: Any? = nu
     }
 
     protected abstract fun buildJson(): JsonObject.() -> Unit
+}
 
-    data class StatePayload(val state: String, val action: String, val reachMax: Boolean = false)
+data class Payload(val state: String, val action: String, val reachMax: Boolean = false, val time: Date = Date())
 
-    class State(override val payload: StatePayload) : InstrumentAction(type = ActionType.STATE.name) {
+class SetStateInstrumentAction(override val payload: Payload) : InstrumentAction(type = ActionType.STATE.name) {
 
-        constructor(json: JsonObject) : this(
-                StatePayload(
-                        json["payload"].asJsonObject["state"].asString,
-                        json["payload"].asJsonObject["action"].asString,
-                        json["payload"].asJsonObject["reach_max"].asBoolean
-                )
-        )
+    constructor(json: JsonObject) : this(
+            Payload(
+                    json["payload"].asJsonObject["state"].asString,
+                    json["payload"].asJsonObject["action"].asString,
+                    json["payload"].asJsonObject["reach_max"].asBoolean
+            )
+    )
 
-        override fun buildJson(): JsonObject.() -> Unit {
-            return {
-                add("payload", JsonObject().apply {
-                    addProperty("state", payload.state)
-                    addProperty("action", payload.action)
-                    addProperty("reach_max", payload.reachMax)
-                })
-            }
+    override fun buildJson(): JsonObject.() -> Unit {
+        return {
+            add("payload", JsonObject().apply {
+                addProperty("state", payload.state)
+                addProperty("action", payload.action)
+                addProperty("reach_max", payload.reachMax)
+            })
         }
-
-    }
-
-    class JumpToState(override val payload: Int) : InstrumentAction(type = ActionType.JUMP_TO_STATE.name) {
-
-        constructor(json: JsonObject) : this(json["payload"].asInt)
-
-        override fun buildJson(): JsonObject.() -> Unit {
-            return {
-                addProperty("payload", payload)
-            }
-        }
-    }
-
-    class Init(override val payload: String) : InstrumentAction(type = ActionType.INIT.name) {
-
-        override fun buildJson(): JsonObject.() -> Unit {
-            return {
-                addProperty("payload", payload)
-            }
-        }
-
     }
 
 }
 
+class JumpToStateInstrumentAction(override val payload: Int) : InstrumentAction(type = ActionType.JUMP_TO_STATE.name) {
+
+    constructor(json: JsonObject) : this(json["payload"].asInt)
+
+    override fun buildJson(): JsonObject.() -> Unit {
+        return {
+            addProperty("payload", payload)
+        }
+    }
+}
+
+class InitInstrumentAction(override val payload: String) : InstrumentAction(type = ActionType.INIT.name) {
+
+    override fun buildJson(): JsonObject.() -> Unit {
+        return {
+            addProperty("payload", payload)
+        }
+    }
+
+}
