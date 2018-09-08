@@ -1,12 +1,12 @@
 package com.github.kittinunf.redux.devTools.viewmodel
 
-import com.github.kittinunf.redux.devTools.InstrumentAction
+import com.github.kittinunf.redux.devTools.Payload
 
 sealed class DevToolsMonitorAction {
 
-    class SetItem(val items: List<InstrumentAction.SetState> = listOf()) : DevToolsMonitorAction()
-    class AddItem(val item: InstrumentAction.SetState) : DevToolsMonitorAction()
-    class ShiftItem(val item: InstrumentAction.SetState) : DevToolsMonitorAction()
+    class SetItem(val items: List<Payload> = listOf()) : DevToolsMonitorAction()
+    class AddItem(val item: Payload) : DevToolsMonitorAction()
+    class ShiftItem(val item: Payload) : DevToolsMonitorAction()
 }
 
 sealed class ChangeOperation {
@@ -18,7 +18,7 @@ sealed class ChangeOperation {
     class Remove(override val index: Int) : ChangeOperation()
 }
 
-data class DevToolsMonitorState(val change: ChangeOperation? = null, val items: List<InstrumentAction.SetState> = listOf()) {
+data class DevToolsMonitorState(val change: ChangeOperation? = null, val items: List<Payload> = listOf()) {
     companion object {
         fun reduce(currentState: DevToolsMonitorState, action: DevToolsMonitorAction) = when (action) {
             is DevToolsMonitorAction.SetItem -> {
