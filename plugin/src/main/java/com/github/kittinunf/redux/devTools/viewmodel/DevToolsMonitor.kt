@@ -19,27 +19,24 @@ sealed class ChangeOperation {
 }
 
 data class DevToolsMonitorState(val change: ChangeOperation? = null, val items: List<InstrumentAction.SetState> = listOf()) {
-
-    fun executeCommand(command: DevToolsMonitorAction): DevToolsMonitorState {
-        when (command) {
+    companion object {
+        fun reduce(currentState: DevToolsMonitorState, action: DevToolsMonitorAction) = when (action) {
             is DevToolsMonitorAction.SetItem -> {
-                return DevToolsMonitorState(null, command.items)
+                DevToolsMonitorState(null, action.items)
             }
 
             is DevToolsMonitorAction.AddItem -> {
-                val newItems = items.toMutableList()
-                newItems.add(command.item)
-                return DevToolsMonitorState(ChangeOperation.Insert(newItems.lastIndex), newItems)
+                val newItems = currentState.items.toMutableList()
+                newItems.add(action.item)
+                DevToolsMonitorState(ChangeOperation.Insert(newItems.lastIndex), newItems)
             }
 
             is DevToolsMonitorAction.ShiftItem -> {
-                val newItems = items.toMutableList()
+                val newItems = currentState.items.toMutableList()
                 newItems.removeAt(0)
-                newItems.add(command.item)
-                return DevToolsMonitorState(null, newItems)
+                newItems.add(action.item)
+                DevToolsMonitorState(null, newItems)
             }
         }
     }
 }
-
-

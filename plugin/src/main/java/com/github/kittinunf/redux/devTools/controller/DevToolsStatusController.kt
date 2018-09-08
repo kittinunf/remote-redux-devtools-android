@@ -6,6 +6,7 @@ import com.github.kittinunf.redux.devTools.ui.DevToolsPanelComponent
 import com.github.kittinunf.redux.devTools.util.addTo
 import com.github.kittinunf.redux.devTools.viewmodel.DevToolsStatusAction
 import com.github.kittinunf.redux.devTools.viewmodel.DevToolsStatusState
+import com.github.kittinunf.redux.devTools.viewmodel.DevToolsStatusState.Companion.reduce
 import com.google.gson.JsonParser
 import rx.Observable
 import rx.schedulers.SwingScheduler
@@ -27,23 +28,17 @@ class DevToolsStatusController(component: DevToolsPanelComponent) {
                         .map { DevToolsStatusAction.SetClient("-") }
         )
 
-        val viewModels = Observable.merge(setAddressCommand, setClientCommand)
-                .scan(DevToolsStatusState()) { viewModel, command ->
-                    viewModel.executeCommand(command)
-                }
+        val states = Observable.merge(setAddressCommand, setClientCommand)
+                .scan(DevToolsStatusState(), ::reduce)
 
-        viewModels.map { it.address }
+        states.map { it.address }
                 .observeOn(SwingScheduler.getInstance())
-                .subscribe {
-                    component.serverAddressLabel.text = it
-                }
+                .subscribe { component.serverAddressLabel.text = it }
                 .addTo(subscriptionBag)
 
-        viewModels.map { it.status }
+        states.map { it.status }
                 .observeOn(SwingScheduler.getInstance())
-                .subscribe {
-                    component.connectedClientLabel.text = it
-                }
+                .subscribe { component.connectedClientLabel.text = it }
                 .addTo(subscriptionBag)
     }
 }

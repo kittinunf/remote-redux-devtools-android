@@ -7,6 +7,7 @@ import com.github.kittinunf.redux.devTools.util.addTo
 import com.github.kittinunf.redux.devTools.viewmodel.ChangeOperation
 import com.github.kittinunf.redux.devTools.viewmodel.DevToolsMonitorAction
 import com.github.kittinunf.redux.devTools.viewmodel.DevToolsMonitorState
+import com.github.kittinunf.redux.devTools.viewmodel.DevToolsMonitorState.Companion.reduce
 import com.google.gson.JsonParser
 import rx.Observable
 import rx.schedulers.SwingScheduler
@@ -39,12 +40,10 @@ class DevToolsMonitorController(component: DevToolsPanelComponent) {
                     }
                 }
 
-        val viewModels = Observable.merge(resetItemsCommand, addItemsCommand)
-                .scan(DevToolsMonitorState()) { viewModel, command ->
-                    viewModel.executeCommand(command)
-                }
+        val states = Observable.merge(resetItemsCommand, addItemsCommand)
+                .scan(DevToolsMonitorState(), ::reduce)
 
-        viewModels.map { viewModel -> viewModel.change to viewModel.items }
+        states.map { viewModel -> viewModel.change to viewModel.items }
                 .observeOn(SwingScheduler.getInstance())
                 .subscribe { data ->
                     val (change, nodes) = data

@@ -7,17 +7,15 @@ sealed class DevToolsStatusAction {
 }
 
 data class DevToolsStatusState(val address: String = "", val status: String = "-") {
-
-    fun executeCommand(command: DevToolsStatusAction): DevToolsStatusState {
-        return when (command) {
+    companion object {
+        fun reduce(currentState: DevToolsStatusState, action: DevToolsStatusAction) = when (action) {
             is DevToolsStatusAction.SetAddress -> {
-                this.copy(address = command.address)
+                currentState.copy(address = action.address)
             }
 
             is DevToolsStatusAction.SetClient -> {
-                this.copy(status = command.status)
+                currentState.copy(status = action.status)
             }
         }
     }
-
 }
