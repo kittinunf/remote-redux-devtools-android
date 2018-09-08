@@ -23,5 +23,7 @@ dependencies {
     compile "io.reactivex:rxswing:$rootProject.ext.rxJavaSwingVersion"
     compile "org.java-websocket:Java-WebSocket:$rootProject.ext.javaWebsocketVersion"
 
+    compile project(':core')
+
     testCompile "junit:junit:$rootProject.ext.junitVersion"
 }

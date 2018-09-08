@@ -1,75 +1,76 @@
 package com.github.kittinunf.redux.devTools.viewmodel
 
-sealed class DevToolsTimeLineViewModelCommand {
+sealed class DevToolsTimeLineAction {
 
-    class Reset(val maxValue: Int) : DevToolsTimeLineViewModelCommand()
-    class Forward : DevToolsTimeLineViewModelCommand()
-    class Backward : DevToolsTimeLineViewModelCommand()
-    class PlayOrPause : DevToolsTimeLineViewModelCommand()
-    class SetToValue(val value: Int) : DevToolsTimeLineViewModelCommand()
-    class AdjustMax : DevToolsTimeLineViewModelCommand()
-    class SetToMax : DevToolsTimeLineViewModelCommand()
+    class Reset(val maxValue: Int) : DevToolsTimeLineAction()
+    object Forward : DevToolsTimeLineAction()
+    object Backward : DevToolsTimeLineAction()
+    object PlayOrPause : DevToolsTimeLineAction()
+    class SetToValue(val value: Int) : DevToolsTimeLineAction()
+    object AdjustMax : DevToolsTimeLineAction()
+    object SetToMax : DevToolsTimeLineAction()
 }
 
-enum class DevToolsTimeLineActionState {
-    PLAY,
-    PAUSE
-}
+data class DevToolsTimeLineState(val initialState: Boolean = true,
+                                 val playState: PlayState = PlayState.PAUSE,
+                                 val value: Int = 0,
+                                 val maxValue: Int,
+                                 val backwardEnabled: Boolean = false,
+                                 val forwardEnabled: Boolean = false,
+                                 val shouldNotifyClient: Boolean = false) {
 
-data class DevToolsTimeLineViewModel(val initialState: Boolean = true,
-                                     val state: DevToolsTimeLineActionState = DevToolsTimeLineActionState.PAUSE,
-                                     val value: Int = 0,
-                                     val maxValue: Int,
-                                     val backwardEnabled: Boolean = false,
-                                     val forwardEnabled: Boolean = false,
-                                     val shouldNotifyClient: Boolean = false) {
+    enum class PlayState {
+        PLAY,
+        PAUSE
+    }
 
-    fun executeCommand(command: DevToolsTimeLineViewModelCommand): DevToolsTimeLineViewModel {
-        when (command) {
-            is DevToolsTimeLineViewModelCommand.Reset -> {
-                return DevToolsTimeLineViewModel(initialState = true, maxValue = command.maxValue, shouldNotifyClient = false)
+    companion object {
+        fun reduce(currentState: DevToolsTimeLineState, action: DevToolsTimeLineAction) = when (action) {
+
+            is DevToolsTimeLineAction.Reset -> {
+                DevToolsTimeLineState(initialState = true, maxValue = action.maxValue, shouldNotifyClient = false)
             }
 
-            is DevToolsTimeLineViewModelCommand.Forward -> {
-                val shiftedValue = value + 1
-                val (newBackwardEnabled, newForwardEnabled) = validateBoundary(shiftedValue)
-                val newValue = if (shiftedValue > maxValue) value else shiftedValue
-                return this.copy(value = newValue, backwardEnabled = newBackwardEnabled, forwardEnabled = newForwardEnabled, shouldNotifyClient = true)
+            is DevToolsTimeLineAction.Forward -> {
+                val shiftedValue = currentState.value + 1
+                val (newBackwardEnabled, newForwardEnabled) = validateBoundary(shiftedValue, currentState.maxValue)
+                val newValue = if (shiftedValue > currentState.maxValue) currentState.value else shiftedValue
+                currentState.copy(value = newValue, backwardEnabled = newBackwardEnabled, forwardEnabled = newForwardEnabled, shouldNotifyClient = true)
             }
 
-            is DevToolsTimeLineViewModelCommand.Backward -> {
-                val shiftedValue = value - 1
-                val (newBackwardEnabled, newForwardEnabled) = validateBoundary(shiftedValue)
-                val newValue = if (shiftedValue < 0) value else shiftedValue
-                return this.copy(value = newValue, backwardEnabled = newBackwardEnabled, forwardEnabled = newForwardEnabled, shouldNotifyClient = true)
+            is DevToolsTimeLineAction.Backward -> {
+                val shiftedValue = currentState.value - 1
+                val (newBackwardEnabled, newForwardEnabled) = validateBoundary(shiftedValue, currentState.maxValue)
+                val newValue = if (shiftedValue < 0) currentState.value else shiftedValue
+                currentState.copy(value = newValue, backwardEnabled = newBackwardEnabled, forwardEnabled = newForwardEnabled, shouldNotifyClient = true)
             }
 
-            is DevToolsTimeLineViewModelCommand.PlayOrPause -> {
-                val newState = if (state == DevToolsTimeLineActionState.PLAY) DevToolsTimeLineActionState.PAUSE else DevToolsTimeLineActionState.PLAY
-                return this.copy(state = newState, shouldNotifyClient = true)
+            is DevToolsTimeLineAction.PlayOrPause -> {
+                val newState = if (currentState.playState == PlayState.PLAY)
+                    PlayState.PAUSE else PlayState.PLAY
+                currentState.copy(playState = newState, shouldNotifyClient = true)
             }
 
-            is DevToolsTimeLineViewModelCommand.SetToValue -> {
-                val (newBackwardEnabled, newForwardEnabled) = validateBoundary(command.value)
-                return this.copy(value = command.value, forwardEnabled = newForwardEnabled, backwardEnabled = newBackwardEnabled, shouldNotifyClient = true)
+            is DevToolsTimeLineAction.SetToValue -> {
+                val (newBackwardEnabled, newForwardEnabled) = validateBoundary(action.value, currentState.maxValue)
+                currentState.copy(value = action.value, forwardEnabled = newForwardEnabled, backwardEnabled = newBackwardEnabled, shouldNotifyClient = true)
             }
 
-            is DevToolsTimeLineViewModelCommand.AdjustMax -> {
-                val newMax = if (initialState) maxValue else maxValue + 1
-                return this.copy(initialState = false, maxValue = newMax, shouldNotifyClient = false)
+            is DevToolsTimeLineAction.AdjustMax -> {
+                val newMax = if (currentState.initialState) currentState.maxValue else currentState.maxValue + 1
+                currentState.copy(initialState = false, maxValue = newMax, shouldNotifyClient = false)
             }
 
-            is DevToolsTimeLineViewModelCommand.SetToMax -> {
-                val newValue = maxValue
-                val (newBackwardEnabled, newForwardEnabled) = validateBoundary(newValue)
-                return this.copy(value = newValue, backwardEnabled = newBackwardEnabled, forwardEnabled = newForwardEnabled, shouldNotifyClient = false)
+            is DevToolsTimeLineAction.SetToMax -> {
+                val newValue = currentState.maxValue
+                val (newBackwardEnabled, newForwardEnabled) = validateBoundary(newValue, currentState.maxValue)
+                currentState.copy(value = newValue, backwardEnabled = newBackwardEnabled, forwardEnabled = newForwardEnabled, shouldNotifyClient = false)
             }
         }
-    }
 
-    private fun validateBoundary(value: Int): Pair<Boolean, Boolean> {
-        return (value != 0) to (value != maxValue)
+        private fun validateBoundary(value: Int, maxValue: Int): Pair<Boolean, Boolean> {
+            return (value != 0) to (value != maxValue)
+        }
     }
-
 }
 

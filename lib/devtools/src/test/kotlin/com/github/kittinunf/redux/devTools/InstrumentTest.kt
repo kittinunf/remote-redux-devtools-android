@@ -1,7 +1,6 @@
 package com.github.kittinunf.redux.devTools
 
 import com.github.kittinunf.redux.devTools.core.Instrument
-import com.github.kittinunf.redux.devTools.core.InstrumentAction
 import com.github.kittinunf.redux.devTools.core.localHostDefaultOption
 import com.github.kittinunf.redux.devTools.socket.MockSocketServer
 import com.github.kittinunf.redux.devTools.socket.callThenWait

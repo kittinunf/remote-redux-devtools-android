@@ -1,9 +1,12 @@
-package com.github.kittinunf.redux.devTools.action
+package com.github.kittinunf.redux.devTools
 
 import com.google.gson.JsonObject
 import java.util.Date
 
-data class Payload(val state: String, val action: String, val reachMax: Boolean = false, val time: Date = Date())
+data class Payload(val state: String,
+                   val action: String,
+                   val reachMax: Boolean = false,
+                   val time: Date = Date())
 
 sealed class InstrumentAction(open val type: String, open val payload: Any? = null) {
 
@@ -32,11 +35,9 @@ sealed class InstrumentAction(open val type: String, open val payload: Any? = nu
     class SetState(override val payload: Payload) : InstrumentAction(type = ActionType.STATE.name) {
 
         constructor(json: JsonObject) : this(
-                Payload(
-                        json["payload"].asJsonObject["state"].asString,
+                Payload(json["payload"].asJsonObject["state"].asString,
                         json["payload"].asJsonObject["action"].asString,
-                        json["payload"].asJsonObject["reach_max"].asBoolean
-                )
+                        json["payload"].asJsonObject["reach_max"].asBoolean)
         )
 
         override fun buildJson(): JsonObject.() -> Unit {
@@ -61,6 +62,3 @@ sealed class InstrumentAction(open val type: String, open val payload: Any? = nu
         }
     }
 }
-
-
-

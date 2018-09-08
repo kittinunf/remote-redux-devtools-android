@@ -1,6 +1,6 @@
 package com.github.kittinunf.redux.devTools.controller
 
-import com.github.kittinunf.redux.devTools.action.InstrumentAction
+import com.github.kittinunf.redux.devTools.InstrumentAction
 import com.github.kittinunf.redux.devTools.socket.SocketServer
 import com.github.kittinunf.redux.devTools.ui.DevToolsPanelComponent
 import com.github.kittinunf.redux.devTools.ui.actionButtonDidPressed
@@ -10,9 +10,9 @@ import com.github.kittinunf.redux.devTools.ui.timeSliderValueDidChanged
 import com.github.kittinunf.redux.devTools.util.R
 import com.github.kittinunf.redux.devTools.util.addTo
 import com.github.kittinunf.redux.devTools.util.resource
-import com.github.kittinunf.redux.devTools.viewmodel.DevToolsTimeLineActionState
-import com.github.kittinunf.redux.devTools.viewmodel.DevToolsTimeLineViewModel
-import com.github.kittinunf.redux.devTools.viewmodel.DevToolsTimeLineViewModelCommand
+import com.github.kittinunf.redux.devTools.viewmodel.DevToolsTimeLineAction
+import com.github.kittinunf.redux.devTools.viewmodel.DevToolsTimeLineState
+import com.github.kittinunf.redux.devTools.viewmodel.DevToolsTimeLineState.Companion.reduce
 import com.google.gson.JsonParser
 import rx.Observable
 import rx.schedulers.SwingScheduler
@@ -30,15 +30,15 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
     init {
         val resetCommand = SocketServer.messages.map { JsonParser().parse(it).asJsonObject }
                 .filter { it["type"].asString == InstrumentAction.ActionType.INIT.name }
-                .map { DevToolsTimeLineViewModelCommand.Reset(initialMaxValue) }
+                .map { DevToolsTimeLineAction.Reset(initialMaxValue) }
 
-        val forwardCommand = component.forwardButtonDidPressed().map { DevToolsTimeLineViewModelCommand.Forward() }
+        val forwardCommand = component.forwardButtonDidPressed().map { DevToolsTimeLineAction.Forward }
 
-        val backwardCommand = component.backwardButtonDidPressed().map { DevToolsTimeLineViewModelCommand.Backward() }
+        val backwardCommand = component.backwardButtonDidPressed().map { DevToolsTimeLineAction.Backward }
 
-        val playOrPauseCommand = component.actionButtonDidPressed().map { DevToolsTimeLineViewModelCommand.PlayOrPause() }
+        val playOrPauseCommand = component.actionButtonDidPressed().map { DevToolsTimeLineAction.PlayOrPause }
 
-        val setValueCommand = component.timeSliderValueDidChanged().map { DevToolsTimeLineViewModelCommand.SetToValue((it.source as JSlider).value) }
+        val setValueCommand = component.timeSliderValueDidChanged().map { DevToolsTimeLineAction.SetToValue((it.source as JSlider).value) }
 
         val adjustMaxAndSetToMaxCommand = SocketServer.messages.map { JsonParser().parse(it).asJsonObject }
                 .filter {
@@ -49,25 +49,23 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
                     isStateAction and !isOverMax
                 }
                 .concatMap {
-                    Observable.from(listOf(DevToolsTimeLineViewModelCommand.AdjustMax(), DevToolsTimeLineViewModelCommand.SetToMax()))
+                    Observable.from(listOf(DevToolsTimeLineAction.AdjustMax, DevToolsTimeLineAction.SetToMax))
                 }
 
-        val viewModels = Observable.merge(resetCommand,
+        val states = Observable.merge(resetCommand,
                 forwardCommand,
                 backwardCommand,
                 playOrPauseCommand,
                 setValueCommand,
                 adjustMaxAndSetToMaxCommand)
-                .scan(DevToolsTimeLineViewModel(maxValue = initialMaxValue)) { viewModel, command ->
-                    viewModel.executeCommand(command)
-                }
+                .scan(DevToolsTimeLineState(maxValue = initialMaxValue), ::reduce)
                 .replay(1)
                 .autoConnect()
 
         component.actionButtonDidPressed()
-                .withLatestFrom(viewModels.map { it.state }) { _, state -> state }
+                .withLatestFrom(states.map { it.playState }) { _, state -> state }
                 //from pause state
-                .filter { it == DevToolsTimeLineActionState.PAUSE }
+                .filter { it == DevToolsTimeLineState.PlayState.PAUSE }
                 .subscribe {
                     Observable.fromCallable { component.timeLineForwardButton.doClick() }
                             .subscribeOn(SwingScheduler.getInstance())
@@ -79,7 +77,7 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
                 .addTo(subscriptionBag)
 
         //play or pause
-        viewModels.map { if (it.state == DevToolsTimeLineActionState.PLAY) resource(R.pause) else resource(R.play) }
+        states.map { if (it.playState == DevToolsTimeLineState.PlayState.PLAY) resource(R.pause) else resource(R.play) }
                 .distinctUntilChanged()
                 .observeOn(SwingScheduler.getInstance())
                 .subscribe {
@@ -88,7 +86,7 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
                 .addTo(subscriptionBag)
 
         //timeline slider
-        viewModels.map { (it.value to it.maxValue) }
+        states.map { (it.value to it.maxValue) }
                 .observeOn(SwingScheduler.getInstance())
                 .subscribe {
                     component.timeLineTimeSlider.model.valueIsAdjusting = true
@@ -98,21 +96,21 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
                 .addTo(subscriptionBag)
 
         //backward button
-        viewModels.map { it.backwardEnabled }
+        states.map { it.backwardEnabled }
                 .distinctUntilChanged()
                 .observeOn(SwingScheduler.getInstance())
                 .subscribe { component.timeLineBackwardButton.isEnabled = it }
                 .addTo(subscriptionBag)
 
         //forward button
-        viewModels.map { it.forwardEnabled }
+        states.map { it.forwardEnabled }
                 .distinctUntilChanged()
                 .observeOn(SwingScheduler.getInstance())
                 .subscribe { component.timeLineForwardButton.isEnabled = it }
                 .addTo(subscriptionBag)
 
         //notify client
-        viewModels.filter { it.shouldNotifyClient }
+        states.filter { it.shouldNotifyClient }
                 .map { it.value }
                 .distinctUntilChanged()
                 .subscribe {
