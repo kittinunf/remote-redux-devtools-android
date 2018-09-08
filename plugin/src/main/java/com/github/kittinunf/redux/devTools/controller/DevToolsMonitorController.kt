@@ -1,7 +1,6 @@
 package com.github.kittinunf.redux.devTools.controller
 
 import com.github.kittinunf.redux.devTools.action.InstrumentAction
-import com.github.kittinunf.redux.devTools.action.SetStateInstrumentAction
 import com.github.kittinunf.redux.devTools.socket.SocketServer
 import com.github.kittinunf.redux.devTools.ui.DevToolsPanelComponent
 import com.github.kittinunf.redux.devTools.util.addTo
@@ -32,7 +31,7 @@ class DevToolsMonitorController(component: DevToolsPanelComponent) {
         val addItemsCommand = SocketServer.messages.map { JsonParser().parse(it).asJsonObject }
                 .filter { it["type"].asString == InstrumentAction.ActionType.STATE.name }
                 .map {
-                    val state = SetStateInstrumentAction(it)
+                    val state = InstrumentAction.SetState(it)
                     if (state.payload.reachMax) {
                         DevToolsMonitorViewModelCommand.ShiftItem(state)
                     } else {
@@ -71,10 +70,9 @@ class DevToolsMonitorController(component: DevToolsPanelComponent) {
                 }
                 .addTo(subscriptionBag)
     }
-
 }
 
-private fun SetStateInstrumentAction.makeNode(index: Int = -1, referenceDate: Date?): DefaultMutableTreeNode {
+private fun InstrumentAction.SetState.makeNode(index: Int = -1, referenceDate: Date?): DefaultMutableTreeNode {
     val orderString = if (index == -1) "" else "[$index]"
     val action = payload.action
     val timeStamp = payload.time
@@ -92,7 +90,7 @@ private fun SetStateInstrumentAction.makeNode(index: Int = -1, referenceDate: Da
             // seconds
             diff > secondInMillis -> "+ ${diff / secondInMillis}.${diff % secondInMillis} Secs"
             // millis
-            else -> "+$diff Millis"
+            else -> "+ $diff Millis"
         }
     }
 
