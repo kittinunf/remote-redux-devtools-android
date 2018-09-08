@@ -2,6 +2,7 @@ package com.github.kittinunf.sample
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import com.github.kittinunf.redux.devTools.core.Instrument
 import com.github.kittinunf.redux.devTools.core.emulatorDefaultOption
 import com.github.kittinunf.sample.redux.Action
@@ -42,13 +43,18 @@ class DevToolsStore<S : State>(private val store: StoreType<S>) : StoreType<S> b
 
     private val instrument =
             Instrument(emulatorDefaultOption(), store.initialState).apply {
-                start()
-                connectBlocking()
-                //send the first state
-                handleStateChangeFromAction(store.initialState, Store.INIT)
+                // configure
+                onError = {
+                    Log.e("[Devtools]", "Instrument", it)
+                }
                 onMessageReceived = {
                     store.dispatch(DevToolsStateChangeAction)
                 }
+
+                start()
+                connectBlocking()
+                // send the first state
+                handleStateChangeFromAction(store.initialState, Store.INIT)
             }
 
     init {
@@ -57,9 +63,8 @@ class DevToolsStore<S : State>(private val store: StoreType<S>) : StoreType<S> b
             if (action is DevToolsStateChangeAction) {
                 instrument.state
             } else {
-                if (instrument.isMonitored) {
-                    instrument.handleStateChangeFromAction(reducedState, action)
-                }
+
+                instrument.handleStateChangeFromAction(reducedState, action)
                 reducedState
             }
         }

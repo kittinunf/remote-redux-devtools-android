@@ -1,5 +1,10 @@
 package com.github.kittinunf.redux.devTools.ui;
 
+import com.github.kittinunf.redux.devTools.util.R;
+import com.github.kittinunf.redux.devTools.util.ResourcesKt;
+
+import java.net.URL;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -53,9 +58,12 @@ public class DevToolsPanelComponent {
     }
 
     private void setUpTimeLineUI() {
-        timeLineActionButton.setIcon(new ImageIcon(getClass().getResource("/images/ic_play.png")));
-        timeLineBackwardButton.setIcon(new ImageIcon(getClass().getResource("/images/ic_backward.png")));
-        timeLineForwardButton.setIcon(new ImageIcon(getClass().getResource("/images/ic_forward.png")));
+        timeLineActionButton.setIcon(new ImageIcon(getResource(R.play)));
+        timeLineBackwardButton.setIcon(new ImageIcon(getResource(R.backward)));
+        timeLineForwardButton.setIcon(new ImageIcon(getResource(R.forward)));
     }
 
+    private URL getResource(String name) {
+        return ResourcesKt.resource(this, name);
+    }
 }

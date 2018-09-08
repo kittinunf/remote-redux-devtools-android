@@ -14,6 +14,8 @@ import rx.schedulers.SwingScheduler
 import rx.subscriptions.CompositeSubscription
 import java.awt.Rectangle
 import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.concurrent.TimeUnit
 import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeModel
 
@@ -51,13 +53,13 @@ class DevToolsMonitorController(component: DevToolsPanelComponent) {
                     if (change == null) {
                         //reload
                         rootNode.removeAllChildren()
-                        nodes.forEachIndexed { index, item -> rootNode.add(item.makeNode(index)) }
+                        nodes.forEachIndexed { index, item -> rootNode.add(item.makeNode(index, if (index == 0) null else nodes[index - 1].payload.time)) }
                         model.reload()
                     } else {
                         //update with change
                         when (change) {
                             is ChangeOperation.Insert -> {
-                                val newNode = nodes[change.index].makeNode(change.index)
+                                val newNode = nodes[change.index].makeNode(change.index, if (change.index == 0) null else nodes[change.index - 1].payload.time)
                                 model.insertNodeInto(newNode, rootNode, rootNode.childCount)
                                 val y = component.monitorStateTree.preferredSize.height
                                 component.monitorStateTree.scrollRectToVisible(Rectangle(0, y, 0, 0))
@@ -71,12 +73,26 @@ class DevToolsMonitorController(component: DevToolsPanelComponent) {
 
 }
 
-private fun SetStateInstrumentAction.makeNode(index: Int = -1): DefaultMutableTreeNode {
+private fun SetStateInstrumentAction.makeNode(index: Int = -1, referenceDate: Date?): DefaultMutableTreeNode {
     val orderString = if (index == -1) "" else "[$index]"
     val action = payload.action
     val timeStamp = payload.time
 
-    return DefaultMutableTreeNode("$orderString $action - ${SimpleDateFormat("HH:mm:ss.SSS").format(timeStamp)}").apply {
+    val shownTime = if (referenceDate == null) {
+        SimpleDateFormat("hh:mm:ss.SSS").format(payload.time)
+    } else {
+        val diff = TimeUnit.MILLISECONDS.convert(timeStamp.time - referenceDate.time, TimeUnit.MILLISECONDS)
+        when {
+            // minutes
+            diff > 1000 * 60 -> "+${diff / (1000 * 60)} Mins"
+            // seconds
+            diff > 1000 -> "+${diff / 1000} Secs"
+            // millis
+            else -> "+$diff Millis"
+        }
+    }
+
+    return DefaultMutableTreeNode("$orderString $action - $shownTime").apply {
         val leaf = DefaultMutableTreeNode(payload.state)
         add(leaf)
     }
