@@ -7,10 +7,7 @@ apply plugin: 'maven'
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$rootProject.ext.kotlinVersion"
-    implementation "org.java-websocket:Java-WebSocket:$rootProject.ext.javaWebsocketVersion"
-    implementation "io.reactivex.rxjava2:rxjava:$rootProject.ext.rxJava2Version"
-
-    implementation project(':core')
+    compile "com.google.code.gson:gson:$rootProject.ext.gsonVersion"
 
     testImplementation project(':lib:test-utils')
     testImplementation "junit:junit:$rootProject.ext.junitVersion"

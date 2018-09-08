@@ -1,5 +1,7 @@
 package com.github.kittinunf.redux.devTools.core
 
+import com.github.kittinunf.redux.devTools.InstrumentAction
+import com.github.kittinunf.redux.devTools.Payload
 import com.github.kittinunf.redux.devTools.socket.SocketClient
 import com.github.kittinunf.redux.devTools.socket.SocketStatus
 import com.google.gson.JsonParser
@@ -82,8 +84,8 @@ class Instrument<S>(private val options: InstrumentOption, private val initialSt
             stateTimeLines.removeAt(0)
         }
         currentStateIndex = stateTimeLines.lastIndex
-        val data = InstrumentAction.State(
-                InstrumentAction.StatePayload(state.toString(), action.javaClass.simpleName, isOverMaxAgeReached)
+        val data = InstrumentAction.SetState(
+                Payload(state.toString(), action.javaClass.simpleName, isOverMaxAgeReached)
         )
         client.send(data.toJsonObject().toString())
     }

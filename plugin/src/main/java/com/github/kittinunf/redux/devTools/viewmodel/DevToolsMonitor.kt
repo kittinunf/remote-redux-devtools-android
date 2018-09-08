@@ -1,6 +1,6 @@
 package com.github.kittinunf.redux.devTools.viewmodel
 
-import com.github.kittinunf.redux.devTools.action.InstrumentAction
+import com.github.kittinunf.redux.devTools.InstrumentAction
 
 sealed class DevToolsMonitorViewModelCommand {
 

@@ -1,6 +1,6 @@
 package com.github.kittinunf.redux.devTools.controller
 
-import com.github.kittinunf.redux.devTools.action.InstrumentAction
+import com.github.kittinunf.redux.devTools.InstrumentAction
 import com.github.kittinunf.redux.devTools.socket.SocketServer
 import com.github.kittinunf.redux.devTools.ui.DevToolsPanelComponent
 import com.github.kittinunf.redux.devTools.util.addTo

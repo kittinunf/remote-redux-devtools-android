@@ -1,4 +1,4 @@
-include ':sample'
+include ':sample', ':core'
 include ':plugin'
 include ':lib:devtools'
 include ':lib:test-utils'
