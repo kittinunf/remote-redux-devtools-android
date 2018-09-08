@@ -27,4 +27,7 @@ class MockSocketServer(port: Int) : WebSocketServer(InetSocketAddress(port)) {
         println("error: ${ex?.message}")
     }
 
+    fun send(msg: String) {
+        connections.forEach { it.send(msg) }
+    }
 }

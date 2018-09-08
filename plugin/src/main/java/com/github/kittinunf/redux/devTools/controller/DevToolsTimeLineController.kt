@@ -7,7 +7,9 @@ import com.github.kittinunf.redux.devTools.ui.actionButtonDidPressed
 import com.github.kittinunf.redux.devTools.ui.backwardButtonDidPressed
 import com.github.kittinunf.redux.devTools.ui.forwardButtonDidPressed
 import com.github.kittinunf.redux.devTools.ui.timeSliderValueDidChanged
+import com.github.kittinunf.redux.devTools.util.R
 import com.github.kittinunf.redux.devTools.util.addTo
+import com.github.kittinunf.redux.devTools.util.resource
 import com.github.kittinunf.redux.devTools.viewmodel.DevToolsTimeLineActionState
 import com.github.kittinunf.redux.devTools.viewmodel.DevToolsTimeLineViewModel
 import com.github.kittinunf.redux.devTools.viewmodel.DevToolsTimeLineViewModelCommand
@@ -77,11 +79,11 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
                 .addTo(subscriptionBag)
 
         //play or pause
-        viewModels.map { if (it.state == DevToolsTimeLineActionState.PLAY) "/images/ic_play.png" else "/images/ic_pause.png" }
+        viewModels.map { if (it.state == DevToolsTimeLineActionState.PLAY) resource(R.pause) else resource(R.play) }
                 .distinctUntilChanged()
                 .observeOn(SwingScheduler.getInstance())
                 .subscribe {
-                    component.timeLineActionButton.icon = ImageIcon(javaClass.getResource(it))
+                    component.timeLineActionButton.icon = ImageIcon(it)
                 }
                 .addTo(subscriptionBag)
 
@@ -110,7 +112,7 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
                 .addTo(subscriptionBag)
 
         //notify client
-        viewModels.filter { it.shouldNotifyClient == true }
+        viewModels.filter { it.shouldNotifyClient }
                 .map { it.value }
                 .distinctUntilChanged()
                 .subscribe {

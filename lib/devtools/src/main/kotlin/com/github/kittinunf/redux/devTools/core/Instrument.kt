@@ -8,8 +8,15 @@ import java.util.UUID
 
 data class InstrumentOption(val host: String, val port: Int, val name: String, val maxAge: Int)
 
-fun localHostDefaultOption() = InstrumentOption("localhost", 8989, UUID.randomUUID().toString(), 30)
-fun emulatorDefaultOption() = InstrumentOption("10.0.2.2", 8989, UUID.randomUUID().toString(), 30)
+fun localHostDefaultOption(port: Int = 8989,
+                           name: String = UUID.randomUUID().toString(),
+                           maxAge: Int = 30) =
+        InstrumentOption("localhost", port, name, maxAge)
+
+fun emulatorDefaultOption(port: Int = 8989,
+                          name: String = UUID.randomUUID().toString(),
+                          maxAge: Int = 30) =
+        InstrumentOption("10.0.2.2", port, name, maxAge)
 
 class Instrument<S>(private val options: InstrumentOption, private val initialState: S) {
 
@@ -23,7 +30,8 @@ class Instrument<S>(private val options: InstrumentOption, private val initialSt
 
     private val stateTimeLines = mutableListOf<S>()
 
-    var onConnectionOpened: (() -> Unit)? = null
+    var onOpen: (() -> Unit)? = null
+    var onError: ((ex: Exception) -> Unit)? = null
     var onMessageReceived: ((S) -> Unit)? = null
 
     private val subscriptions = CompositeDisposable()
@@ -35,8 +43,8 @@ class Instrument<S>(private val options: InstrumentOption, private val initialSt
             return stateTimeLines.getOrNull(currentStateIndex) ?: initialState
         }
 
-    fun start() {
-        if (started) return
+    fun start(): Instrument<S> {
+        if (started) return this
         isMonitored = true
 
         //handle message
@@ -53,9 +61,12 @@ class Instrument<S>(private val options: InstrumentOption, private val initialSt
 
         subscriptions.add(client.connections.filter { it is SocketStatus.Error }
                 .subscribe {
-                    throw (it as SocketStatus.Error).ex ?: error("Socket Status Error")
+                    onError?.invoke((it as SocketStatus.Error).ex
+                            ?: error("Socket Status Error"))
                 }
         )
+
+        return this
     }
 
     fun connect() = client.connect()
@@ -63,7 +74,7 @@ class Instrument<S>(private val options: InstrumentOption, private val initialSt
     fun connectBlocking() = client.connectBlocking()
 
     fun handleStateChangeFromAction(state: S, action: Any) {
-        if (!started) return
+        if (!started || !isMonitored) return
 
         stateTimeLines.add(state)
         val isOverMaxAgeReached = stateTimeLines.size > options.maxAge
@@ -77,7 +88,14 @@ class Instrument<S>(private val options: InstrumentOption, private val initialSt
         client.send(data.toJsonObject().toString())
     }
 
-    fun stop() {
+    fun close() {
+        started = false
+        isMonitored = false
+        subscriptions.clear()
+        client.close()
+    }
+
+    fun closeBlocking() {
         started = false
         isMonitored = false
         subscriptions.clear()
@@ -85,9 +103,9 @@ class Instrument<S>(private val options: InstrumentOption, private val initialSt
     }
 
     private fun handleConnectionOpened() {
+        onOpen?.invoke()
         val message = InstrumentAction.Init(options.name).toJsonObject().toString()
         client.send(message)
-        onConnectionOpened?.invoke()
     }
 
     private fun handleMessageReceived(s: String) {

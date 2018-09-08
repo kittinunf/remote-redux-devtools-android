@@ -4,10 +4,9 @@ import com.github.kittinunf.redux.devTools.action.InstrumentAction
 
 sealed class DevToolsMonitorViewModelCommand {
 
-    class SetItem(val items: List<InstrumentAction.State> = listOf()) : DevToolsMonitorViewModelCommand()
-    class AddItem(val item: InstrumentAction.State) : DevToolsMonitorViewModelCommand()
-    class ShiftItem(val item: InstrumentAction.State) : DevToolsMonitorViewModelCommand()
-
+    class SetItem(val items: List<InstrumentAction.SetState> = listOf()) : DevToolsMonitorViewModelCommand()
+    class AddItem(val item: InstrumentAction.SetState) : DevToolsMonitorViewModelCommand()
+    class ShiftItem(val item: InstrumentAction.SetState) : DevToolsMonitorViewModelCommand()
 }
 
 sealed class ChangeOperation {
@@ -20,7 +19,7 @@ sealed class ChangeOperation {
 
 }
 
-data class DevToolsMonitorViewModel(val change: ChangeOperation? = null, val items: List<InstrumentAction.State> = listOf()) {
+data class DevToolsMonitorViewModel(val change: ChangeOperation? = null, val items: List<InstrumentAction.SetState> = listOf()) {
 
     fun executeCommand(command: DevToolsMonitorViewModelCommand): DevToolsMonitorViewModel {
         when (command) {
@@ -42,7 +41,6 @@ data class DevToolsMonitorViewModel(val change: ChangeOperation? = null, val ite
             }
         }
     }
-
 }
 
 

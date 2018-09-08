@@ -2,15 +2,14 @@ package com.github.kittinunf.redux.devTools
 
 import com.github.kittinunf.redux.devTools.core.Instrument
 import com.github.kittinunf.redux.devTools.core.InstrumentAction
-import com.github.kittinunf.redux.devTools.core.InstrumentOption
+import com.github.kittinunf.redux.devTools.core.localHostDefaultOption
 import com.github.kittinunf.redux.devTools.socket.MockSocketServer
+import com.github.kittinunf.redux.devTools.socket.callThenWait
+import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
-import org.hamcrest.CoreMatchers.`is` as isEqualTo
 
 class InstrumentTest {
 
@@ -34,119 +33,141 @@ class InstrumentTest {
     data class CounterState(val counter: Int = 0)
 
     sealed class CounterAction {
-        object Increment
-        object Decrement
+        object IncreaseTo
+        object DecreaseTo
     }
 
     @Test
     fun `add new state, must put current state to last`() {
-        val instrument = Instrument(InstrumentOption("localhost", TEST_PORT, "TEST_CLIENT", 10), CounterState())
+        val instrument = createInstrument(10)
         instrument.start()
         instrument.connectBlocking()
 
-        instrument.handleStateChangeFromAction(CounterState(1), CounterAction.Increment)
-        assertThat(instrument.state.counter, isEqualTo(1))
-        instrument.stop()
+        instrument.handleStateChangeFromAction(CounterState(1), CounterAction.IncreaseTo)
+        assertThat(instrument.state.counter, equalTo(1))
+        instrument.closeBlocking()
     }
 
     @Test
     fun `add multiple states, current state is the last added state`() {
-        val instrument = Instrument(InstrumentOption("localhost", TEST_PORT, "TEST_CLIENT", 10), CounterState())
+        val instrument = createInstrument(10)
         instrument.start()
         instrument.connectBlocking()
 
-        instrument.handleStateChangeFromAction(CounterState(1), CounterAction.Increment)
-        instrument.handleStateChangeFromAction(CounterState(47), CounterAction.Increment)
+        instrument.handleStateChangeFromAction(CounterState(1), CounterAction.IncreaseTo)
+        instrument.handleStateChangeFromAction(CounterState(47), CounterAction.IncreaseTo)
 
-        assertThat(instrument.state.counter, isEqualTo(47))
-        instrument.stop()
+        assertThat(instrument.state.counter, equalTo(47))
+        instrument.closeBlocking()
+    }
+
+    @Test
+    fun `add multiple states, stop monitoring, then the current state should be calculated correctly`() {
+        val instrument = createInstrument(5).apply {
+            start().connectBlocking()
+        }
+
+        instrument.handleStateChangeFromAction(CounterState(10), CounterAction.IncreaseTo)
+
+        assertThat(instrument.state.counter, equalTo(10))
+
+        instrument.handleStateChangeFromAction(CounterState(-2), CounterAction.DecreaseTo)
+
+        assertThat(instrument.state.counter, equalTo(-2))
+
+        instrument.isMonitored = false
+
+        instrument.handleStateChangeFromAction(CounterState(-47), CounterAction.DecreaseTo)
+
+        assertThat(instrument.state.counter, equalTo(-2))
+
+        instrument.isMonitored = true
+
+        instrument.handleStateChangeFromAction(CounterState(32), CounterAction.DecreaseTo)
+
+        assertThat(instrument.state.counter, equalTo(32))
     }
 
     @Test
     fun `send command jump to state index, make current state shifted accordingly`() {
-        val instrument = Instrument(InstrumentOption("localhost", TEST_PORT, "TEST_CLIENT", 10), CounterState())
+        val instrument = createInstrument(10)
         instrument.start()
         instrument.connectBlocking()
 
-        instrument.handleStateChangeFromAction(CounterState(1), CounterAction.Increment) //0
-        instrument.handleStateChangeFromAction(CounterState(8), CounterAction.Increment) //1
-        instrument.handleStateChangeFromAction(CounterState(4), CounterAction.Decrement) //2
-        instrument.handleStateChangeFromAction(CounterState(47), CounterAction.Increment) //3
+        instrument.handleStateChangeFromAction(CounterState(1), CounterAction.IncreaseTo) //0
+        instrument.handleStateChangeFromAction(CounterState(8), CounterAction.IncreaseTo) //1
+        instrument.handleStateChangeFromAction(CounterState(4), CounterAction.DecreaseTo) //2
+        instrument.handleStateChangeFromAction(CounterState(47), CounterAction.IncreaseTo) //3
 
         //first, state is equal to latest change
-        assertThat(instrument.state.counter, isEqualTo(47))
+        assertThat(instrument.state.counter, equalTo(47))
 
-        callThenWaitInSecond(2) {
-            mockServer.connections().first().send(InstrumentAction.JumpToState(0).toJsonObject().toString())
+        callThenWait(2) {
+            mockServer.send(InstrumentAction.JumpToState(0).toJsonObject().toString())
         }
-        assertThat(instrument.state.counter, isEqualTo(1))
+        assertThat(instrument.state.counter, equalTo(1))
 
-        callThenWaitInSecond(2) {
-            mockServer.connections().first().send(InstrumentAction.JumpToState(3).toJsonObject().toString())
+        callThenWait(2) {
+            mockServer.send(InstrumentAction.JumpToState(3).toJsonObject().toString())
         }
-        assertThat(instrument.state.counter, isEqualTo(47))
+        assertThat(instrument.state.counter, equalTo(47))
 
-        callThenWaitInSecond(2) {
-            mockServer.connections().first().send(InstrumentAction.JumpToState(2).toJsonObject().toString())
+        callThenWait(2) {
+            mockServer.send(InstrumentAction.JumpToState(2).toJsonObject().toString())
         }
-        assertThat(instrument.state.counter, isEqualTo(4))
+        assertThat(instrument.state.counter, equalTo(4))
 
-        callThenWaitInSecond(2) {
-            mockServer.connections().first().send(InstrumentAction.JumpToState(1).toJsonObject().toString())
+        callThenWait(2) {
+            mockServer.send(InstrumentAction.JumpToState(1).toJsonObject().toString())
         }
-        assertThat(instrument.state.counter, isEqualTo(8))
+        assertThat(instrument.state.counter, equalTo(8))
 
-        instrument.stop()
-    }
-
-    fun callThenWaitInSecond(l: Long, run: () -> Unit) {
-        val count = CountDownLatch(1)
-        run()
-        count.await(l, TimeUnit.SECONDS)
+        instrument.closeBlocking()
     }
 
     @Test
     fun `state is shifted when the max age config is reached`() {
-        val instrument = Instrument(InstrumentOption("localhost", TEST_PORT, "TEST_CLIENT", 5), CounterState())
+        val instrument = createInstrument(5)
 
         instrument.start()
         instrument.connectBlocking()
 
-        instrument.handleStateChangeFromAction(CounterState(1), CounterAction.Increment) //0
-        instrument.handleStateChangeFromAction(CounterState(8), CounterAction.Increment) //1
-        instrument.handleStateChangeFromAction(CounterState(4), CounterAction.Decrement) //2
-        instrument.handleStateChangeFromAction(CounterState(47), CounterAction.Increment) //3
-        instrument.handleStateChangeFromAction(CounterState(16), CounterAction.Decrement) //4
+        instrument.handleStateChangeFromAction(CounterState(1), CounterAction.IncreaseTo) //0
+        instrument.handleStateChangeFromAction(CounterState(8), CounterAction.IncreaseTo) //1
+        instrument.handleStateChangeFromAction(CounterState(4), CounterAction.DecreaseTo) //2
+        instrument.handleStateChangeFromAction(CounterState(47), CounterAction.IncreaseTo) //3
+        instrument.handleStateChangeFromAction(CounterState(16), CounterAction.DecreaseTo) //4
 
         //first, state is equal to latest change
-        assertThat(instrument.state.counter, isEqualTo(16))
+        assertThat(instrument.state.counter, equalTo(16))
 
-        callThenWaitInSecond(2) {
-            mockServer.connections().first().send(InstrumentAction.JumpToState(0).toJsonObject().toString())
+        callThenWait(2) {
+            mockServer.send(InstrumentAction.JumpToState(0).toJsonObject().toString())
         }
         //at 0 index, counter is equal to 1
-        assertThat(instrument.state.counter, isEqualTo(1))
+        assertThat(instrument.state.counter, equalTo(1))
 
         //the oldest one gets remove
-        instrument.handleStateChangeFromAction(CounterState(27), CounterAction.Increment) //5
-        callThenWaitInSecond(2) {
-            mockServer.connections().first().send(InstrumentAction.JumpToState(0).toJsonObject().toString())
+        instrument.handleStateChangeFromAction(CounterState(27), CounterAction.IncreaseTo) //5
+        callThenWait(2) {
+            mockServer.send(InstrumentAction.JumpToState(0).toJsonObject().toString())
         }
-        assertThat(instrument.state.counter, isEqualTo(8))
+        assertThat(instrument.state.counter, equalTo(8))
 
         //again, the oldest one gets remove
-        instrument.handleStateChangeFromAction(CounterState(3), CounterAction.Decrement) //6
-        callThenWaitInSecond(2) {
-            mockServer.connections().first().send(InstrumentAction.JumpToState(0).toJsonObject().toString())
+        instrument.handleStateChangeFromAction(CounterState(3), CounterAction.DecreaseTo) //6
+        callThenWait(2) {
+            mockServer.send(InstrumentAction.JumpToState(0).toJsonObject().toString())
         }
-        assertThat(instrument.state.counter, isEqualTo(4))
+        assertThat(instrument.state.counter, equalTo(4))
 
         //again, the oldest one gets remove
-        instrument.handleStateChangeFromAction(CounterState(10), CounterAction.Increment) //7
-        callThenWaitInSecond(2) {
-            mockServer.connections().first().send(InstrumentAction.JumpToState(0).toJsonObject().toString())
+        instrument.handleStateChangeFromAction(CounterState(10), CounterAction.IncreaseTo) //7
+        callThenWait(2) {
+            mockServer.send(InstrumentAction.JumpToState(0).toJsonObject().toString())
         }
-        assertThat(instrument.state.counter, isEqualTo(47))
+        assertThat(instrument.state.counter, equalTo(47))
     }
 
+    private fun createInstrument(maxAge: Int) = Instrument(localHostDefaultOption(TEST_PORT, "TEST", maxAge), CounterState())
 }

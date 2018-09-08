@@ -13,6 +13,11 @@ intellij {
     pluginName 'Remote Redux Devtools'
 }
 
+patchPluginXml {
+    sinceBuild '162'
+    untilBuild ''
+}
+
 dependencies {
     compile "io.reactivex:rxjava:$rootProject.ext.rxJavaVersion"
     compile "io.reactivex:rxswing:$rootProject.ext.rxJavaSwingVersion"

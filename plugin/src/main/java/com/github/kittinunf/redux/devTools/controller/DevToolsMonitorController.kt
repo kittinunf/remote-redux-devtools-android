@@ -12,6 +12,10 @@ import rx.Observable
 import rx.schedulers.SwingScheduler
 import rx.subscriptions.CompositeSubscription
 import java.awt.Rectangle
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.concurrent.TimeUnit
 import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeModel
 
@@ -27,7 +31,7 @@ class DevToolsMonitorController(component: DevToolsPanelComponent) {
         val addItemsCommand = SocketServer.messages.map { JsonParser().parse(it).asJsonObject }
                 .filter { it["type"].asString == InstrumentAction.ActionType.STATE.name }
                 .map {
-                    val state = InstrumentAction.State(it)
+                    val state = InstrumentAction.SetState(it)
                     if (state.payload.reachMax) {
                         DevToolsMonitorViewModelCommand.ShiftItem(state)
                     } else {
@@ -49,13 +53,13 @@ class DevToolsMonitorController(component: DevToolsPanelComponent) {
                     if (change == null) {
                         //reload
                         rootNode.removeAllChildren()
-                        nodes.forEach { rootNode.add(it.makeNode()) }
+                        nodes.forEachIndexed { index, item -> rootNode.add(item.makeNode(index, if (index == 0) null else nodes[index - 1].payload.time)) }
                         model.reload()
                     } else {
                         //update with change
                         when (change) {
                             is ChangeOperation.Insert -> {
-                                val newNode = nodes[change.index].makeNode()
+                                val newNode = nodes[change.index].makeNode(change.index, if (change.index == 0) null else nodes[change.index - 1].payload.time)
                                 model.insertNodeInto(newNode, rootNode, rootNode.childCount)
                                 val y = component.monitorStateTree.preferredSize.height
                                 component.monitorStateTree.scrollRectToVisible(Rectangle(0, y, 0, 0))
@@ -66,11 +70,31 @@ class DevToolsMonitorController(component: DevToolsPanelComponent) {
                 }
                 .addTo(subscriptionBag)
     }
-
 }
 
-fun InstrumentAction.State.makeNode(): DefaultMutableTreeNode {
-    return DefaultMutableTreeNode(payload.action).apply {
+private fun InstrumentAction.SetState.makeNode(index: Int = -1, referenceDate: Date?): DefaultMutableTreeNode {
+    val orderString = if (index == -1) "" else "[$index]"
+    val action = payload.action
+    val timeStamp = payload.time
+
+    val shownTime = if (referenceDate == null) {
+        SimpleDateFormat("hh:mm:ss.SSS", Locale.getDefault()).format(payload.time)
+    } else {
+        val diff = TimeUnit.MILLISECONDS.convert(timeStamp.time - referenceDate.time, TimeUnit.MILLISECONDS)
+
+        val minuteInMillis = TimeUnit.MINUTES.toMillis(1)
+        val secondInMillis = TimeUnit.SECONDS.toMillis(1)
+        when {
+            // minutes
+            diff > minuteInMillis -> "+ ${diff / (minuteInMillis)} Mins"
+            // seconds
+            diff > secondInMillis -> "+ ${diff / secondInMillis}.${diff % secondInMillis} Secs"
+            // millis
+            else -> "+ $diff Millis"
+        }
+    }
+
+    return DefaultMutableTreeNode("$orderString $action - $shownTime").apply {
         val leaf = DefaultMutableTreeNode(payload.state)
         add(leaf)
     }

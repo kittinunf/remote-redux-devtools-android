@@ -63,4 +63,7 @@ fabric.properties
 # Editor-based Rest Client
 .idea/httpRequests
 
+# Build
+build
+
 local.properties

@@ -16,7 +16,7 @@ object SocketServer : WebSocketServer(InetSocketAddress(8989)) {
     }
 
     private val messageSubject = SerializedSubject(BehaviorSubject.create<String>())
-    private val connectSubject = SerializedSubject(BehaviorSubject.create<Pair<InetSocketAddress, SocketStatus>>())
+    private val connectSubject = SerializedSubject(BehaviorSubject.create<Pair<InetSocketAddress?, SocketStatus>>())
 
     val messages = messageSubject.asObservable()
     val connects = connectSubject.asObservable()
@@ -40,8 +40,8 @@ object SocketServer : WebSocketServer(InetSocketAddress(8989)) {
         messageSubject.onNext(message)
     }
 
-    override fun onError(webSocket: WebSocket, ex: Exception?) {
-        connectSubject.onNext(webSocket.localSocketAddress to SocketStatus.ERROR)
+    override fun onError(webSocket: WebSocket?, ex: Exception?) {
+        connectSubject.onNext(webSocket?.localSocketAddress to SocketStatus.ERROR)
     }
 
     fun send(message: String) {

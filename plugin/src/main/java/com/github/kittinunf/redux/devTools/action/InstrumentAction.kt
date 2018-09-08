@@ -1,6 +1,9 @@
 package com.github.kittinunf.redux.devTools.action
 
 import com.google.gson.JsonObject
+import java.util.Date
+
+data class Payload(val state: String, val action: String, val reachMax: Boolean = false, val time: Date = Date())
 
 sealed class InstrumentAction(open val type: String, open val payload: Any? = null) {
 
@@ -17,12 +20,19 @@ sealed class InstrumentAction(open val type: String, open val payload: Any? = nu
 
     protected abstract fun buildJson(): JsonObject.() -> Unit
 
-    data class StatePayload(val state: String, val action: String, val reachMax: Boolean = false)
+    class Init(override val payload: String) : InstrumentAction(type = ActionType.INIT.name) {
 
-    class State(override val payload: StatePayload) : InstrumentAction(type = ActionType.STATE.name) {
+        override fun buildJson(): JsonObject.() -> Unit {
+            return {
+                addProperty("payload", payload)
+            }
+        }
+    }
+
+    class SetState(override val payload: Payload) : InstrumentAction(type = ActionType.STATE.name) {
 
         constructor(json: JsonObject) : this(
-                StatePayload(
+                Payload(
                         json["payload"].asJsonObject["state"].asString,
                         json["payload"].asJsonObject["action"].asString,
                         json["payload"].asJsonObject["reach_max"].asBoolean
@@ -38,7 +48,6 @@ sealed class InstrumentAction(open val type: String, open val payload: Any? = nu
                 })
             }
         }
-
     }
 
     class JumpToState(override val payload: Int) : InstrumentAction(type = ActionType.JUMP_TO_STATE.name) {
@@ -51,16 +60,7 @@ sealed class InstrumentAction(open val type: String, open val payload: Any? = nu
             }
         }
     }
-
-    class Init(override val payload: String) : InstrumentAction(type = ActionType.INIT.name) {
-
-        override fun buildJson(): JsonObject.() -> Unit {
-            return {
-                addProperty("payload", payload)
-            }
-        }
-
-    }
-
 }
+
+
 
