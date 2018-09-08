@@ -4,8 +4,8 @@ import com.github.kittinunf.redux.devTools.InstrumentAction
 import com.github.kittinunf.redux.devTools.socket.SocketServer
 import com.github.kittinunf.redux.devTools.ui.DevToolsPanelComponent
 import com.github.kittinunf.redux.devTools.util.addTo
-import com.github.kittinunf.redux.devTools.viewmodel.DevToolsStatusViewModel
-import com.github.kittinunf.redux.devTools.viewmodel.DevToolsStatusViewModelCommand
+import com.github.kittinunf.redux.devTools.viewmodel.DevToolsStatusAction
+import com.github.kittinunf.redux.devTools.viewmodel.DevToolsStatusState
 import com.google.gson.JsonParser
 import rx.Observable
 import rx.schedulers.SwingScheduler
@@ -17,18 +17,18 @@ class DevToolsStatusController(component: DevToolsPanelComponent) {
 
     init {
         val setAddressCommand = Observable.fromCallable { "${SocketServer.address.hostString}:${SocketServer.address.port}" }
-                .map { DevToolsStatusViewModelCommand.SetAddress(it.toString()) }
+                .map { DevToolsStatusAction.SetAddress(it.toString()) }
 
         val setClientCommand = Observable.merge(
                 SocketServer.messages.map { JsonParser().parse(it).asJsonObject }
                         .filter { it["type"].asString == InstrumentAction.ActionType.INIT.name }
-                        .map { DevToolsStatusViewModelCommand.SetClient(it["payload"].asString) },
+                        .map { DevToolsStatusAction.SetClient(it["payload"].asString) },
                 SocketServer.connects.filter { it.second == SocketServer.SocketStatus.CLOSE }
-                        .map { DevToolsStatusViewModelCommand.SetClient("-") }
+                        .map { DevToolsStatusAction.SetClient("-") }
         )
 
         val viewModels = Observable.merge(setAddressCommand, setClientCommand)
-                .scan(DevToolsStatusViewModel()) { viewModel, command ->
+                .scan(DevToolsStatusState()) { viewModel, command ->
                     viewModel.executeCommand(command)
                 }
 
@@ -46,5 +46,4 @@ class DevToolsStatusController(component: DevToolsPanelComponent) {
                 }
                 .addTo(subscriptionBag)
     }
-
 }

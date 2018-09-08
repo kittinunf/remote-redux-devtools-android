@@ -5,8 +5,8 @@ import com.github.kittinunf.redux.devTools.socket.SocketServer
 import com.github.kittinunf.redux.devTools.ui.DevToolsPanelComponent
 import com.github.kittinunf.redux.devTools.util.addTo
 import com.github.kittinunf.redux.devTools.viewmodel.ChangeOperation
-import com.github.kittinunf.redux.devTools.viewmodel.DevToolsMonitorViewModel
-import com.github.kittinunf.redux.devTools.viewmodel.DevToolsMonitorViewModelCommand
+import com.github.kittinunf.redux.devTools.viewmodel.DevToolsMonitorAction
+import com.github.kittinunf.redux.devTools.viewmodel.DevToolsMonitorState
 import com.google.gson.JsonParser
 import rx.Observable
 import rx.schedulers.SwingScheduler
@@ -26,21 +26,21 @@ class DevToolsMonitorController(component: DevToolsPanelComponent) {
     init {
         val resetItemsCommand = SocketServer.messages.map { JsonParser().parse(it).asJsonObject }
                 .filter { it["type"].asString == InstrumentAction.ActionType.INIT.name }
-                .map { DevToolsMonitorViewModelCommand.SetItem() }
+                .map { DevToolsMonitorAction.SetItem() }
 
         val addItemsCommand = SocketServer.messages.map { JsonParser().parse(it).asJsonObject }
                 .filter { it["type"].asString == InstrumentAction.ActionType.STATE.name }
                 .map {
                     val state = InstrumentAction.SetState(it)
                     if (state.payload.reachMax) {
-                        DevToolsMonitorViewModelCommand.ShiftItem(state)
+                        DevToolsMonitorAction.ShiftItem(state)
                     } else {
-                        DevToolsMonitorViewModelCommand.AddItem(state)
+                        DevToolsMonitorAction.AddItem(state)
                     }
                 }
 
         val viewModels = Observable.merge(resetItemsCommand, addItemsCommand)
-                .scan(DevToolsMonitorViewModel()) { viewModel, command ->
+                .scan(DevToolsMonitorState()) { viewModel, command ->
                     viewModel.executeCommand(command)
                 }
 

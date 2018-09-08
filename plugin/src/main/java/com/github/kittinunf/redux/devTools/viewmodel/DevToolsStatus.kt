@@ -1,20 +1,20 @@
 package com.github.kittinunf.redux.devTools.viewmodel
 
-sealed class DevToolsStatusViewModelCommand {
+sealed class DevToolsStatusAction {
 
-    class SetAddress(val address: String) : DevToolsStatusViewModelCommand()
-    class SetClient(val status: String) : DevToolsStatusViewModelCommand()
+    class SetAddress(val address: String) : DevToolsStatusAction()
+    class SetClient(val status: String) : DevToolsStatusAction()
 }
 
-data class DevToolsStatusViewModel(val address: String = "", val status: String = "-") {
+data class DevToolsStatusState(val address: String = "", val status: String = "-") {
 
-    fun executeCommand(command: DevToolsStatusViewModelCommand): DevToolsStatusViewModel {
+    fun executeCommand(command: DevToolsStatusAction): DevToolsStatusState {
         return when (command) {
-            is DevToolsStatusViewModelCommand.SetAddress -> {
+            is DevToolsStatusAction.SetAddress -> {
                 this.copy(address = command.address)
             }
 
-            is DevToolsStatusViewModelCommand.SetClient -> {
+            is DevToolsStatusAction.SetClient -> {
                 this.copy(status = command.status)
             }
         }

@@ -10,9 +10,9 @@ import com.github.kittinunf.redux.devTools.ui.timeSliderValueDidChanged
 import com.github.kittinunf.redux.devTools.util.R
 import com.github.kittinunf.redux.devTools.util.addTo
 import com.github.kittinunf.redux.devTools.util.resource
-import com.github.kittinunf.redux.devTools.viewmodel.DevToolsTimeLineActionState
-import com.github.kittinunf.redux.devTools.viewmodel.DevToolsTimeLineViewModel
-import com.github.kittinunf.redux.devTools.viewmodel.DevToolsTimeLineViewModelCommand
+import com.github.kittinunf.redux.devTools.viewmodel.DevToolsTimeLineAction
+import com.github.kittinunf.redux.devTools.viewmodel.DevToolsTimeLinePlayState
+import com.github.kittinunf.redux.devTools.viewmodel.DevToolsTimeLineState
 import com.google.gson.JsonParser
 import rx.Observable
 import rx.schedulers.SwingScheduler
@@ -30,15 +30,15 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
     init {
         val resetCommand = SocketServer.messages.map { JsonParser().parse(it).asJsonObject }
                 .filter { it["type"].asString == InstrumentAction.ActionType.INIT.name }
-                .map { DevToolsTimeLineViewModelCommand.Reset(initialMaxValue) }
+                .map { DevToolsTimeLineAction.Reset(initialMaxValue) }
 
-        val forwardCommand = component.forwardButtonDidPressed().map { DevToolsTimeLineViewModelCommand.Forward() }
+        val forwardCommand = component.forwardButtonDidPressed().map { DevToolsTimeLineAction.Forward }
 
-        val backwardCommand = component.backwardButtonDidPressed().map { DevToolsTimeLineViewModelCommand.Backward() }
+        val backwardCommand = component.backwardButtonDidPressed().map { DevToolsTimeLineAction.Backward }
 
-        val playOrPauseCommand = component.actionButtonDidPressed().map { DevToolsTimeLineViewModelCommand.PlayOrPause() }
+        val playOrPauseCommand = component.actionButtonDidPressed().map { DevToolsTimeLineAction.PlayOrPause }
 
-        val setValueCommand = component.timeSliderValueDidChanged().map { DevToolsTimeLineViewModelCommand.SetToValue((it.source as JSlider).value) }
+        val setValueCommand = component.timeSliderValueDidChanged().map { DevToolsTimeLineAction.SetToValue((it.source as JSlider).value) }
 
         val adjustMaxAndSetToMaxCommand = SocketServer.messages.map { JsonParser().parse(it).asJsonObject }
                 .filter {
@@ -49,7 +49,7 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
                     isStateAction and !isOverMax
                 }
                 .concatMap {
-                    Observable.from(listOf(DevToolsTimeLineViewModelCommand.AdjustMax(), DevToolsTimeLineViewModelCommand.SetToMax()))
+                    Observable.from(listOf(DevToolsTimeLineAction.AdjustMax, DevToolsTimeLineAction.SetToMax))
                 }
 
         val viewModels = Observable.merge(resetCommand,
@@ -58,7 +58,7 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
                 playOrPauseCommand,
                 setValueCommand,
                 adjustMaxAndSetToMaxCommand)
-                .scan(DevToolsTimeLineViewModel(maxValue = initialMaxValue)) { viewModel, command ->
+                .scan(DevToolsTimeLineState(maxValue = initialMaxValue)) { viewModel, command ->
                     viewModel.executeCommand(command)
                 }
                 .replay(1)
@@ -67,7 +67,7 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
         component.actionButtonDidPressed()
                 .withLatestFrom(viewModels.map { it.state }) { _, state -> state }
                 //from pause state
-                .filter { it == DevToolsTimeLineActionState.PAUSE }
+                .filter { it == DevToolsTimeLinePlayState.PAUSE }
                 .subscribe {
                     Observable.fromCallable { component.timeLineForwardButton.doClick() }
                             .subscribeOn(SwingScheduler.getInstance())
@@ -79,7 +79,7 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
                 .addTo(subscriptionBag)
 
         //play or pause
-        viewModels.map { if (it.state == DevToolsTimeLineActionState.PLAY) resource(R.pause) else resource(R.play) }
+        viewModels.map { if (it.state == DevToolsTimeLinePlayState.PLAY) resource(R.pause) else resource(R.play) }
                 .distinctUntilChanged()
                 .observeOn(SwingScheduler.getInstance())
                 .subscribe {
