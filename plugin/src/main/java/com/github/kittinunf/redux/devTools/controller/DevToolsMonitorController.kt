@@ -15,6 +15,7 @@ import rx.subscriptions.CompositeSubscription
 import java.awt.Rectangle
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeModel
@@ -79,14 +80,17 @@ private fun SetStateInstrumentAction.makeNode(index: Int = -1, referenceDate: Da
     val timeStamp = payload.time
 
     val shownTime = if (referenceDate == null) {
-        SimpleDateFormat("hh:mm:ss.SSS").format(payload.time)
+        SimpleDateFormat("hh:mm:ss.SSS", Locale.getDefault()).format(payload.time)
     } else {
         val diff = TimeUnit.MILLISECONDS.convert(timeStamp.time - referenceDate.time, TimeUnit.MILLISECONDS)
+
+        val minuteInMillis = TimeUnit.MINUTES.toMillis(1)
+        val secondInMillis = TimeUnit.SECONDS.toMillis(1)
         when {
             // minutes
-            diff > 1000 * 60 -> "+${diff / (1000 * 60)} Mins"
+            diff > minuteInMillis -> "+ ${diff / (minuteInMillis)} Mins"
             // seconds
-            diff > 1000 -> "+${diff / 1000} Secs"
+            diff > secondInMillis -> "+ ${diff / secondInMillis}.${diff % secondInMillis} Secs"
             // millis
             else -> "+$diff Millis"
         }

@@ -84,7 +84,7 @@ class InstrumentTest {
         instrument.isMonitored = true
 
         instrument.handleStateChangeFromAction(CounterState(32), CounterAction.DecreaseTo)
-        
+
         assertThat(instrument.state.counter, equalTo(32))
     }
 
@@ -103,22 +103,22 @@ class InstrumentTest {
         assertThat(instrument.state.counter, equalTo(47))
 
         callThenWait(2) {
-            mockServer.connections().first().send(InstrumentAction.JumpToState(0).toJsonObject().toString())
+            mockServer.send(InstrumentAction.JumpToState(0).toJsonObject().toString())
         }
         assertThat(instrument.state.counter, equalTo(1))
 
         callThenWait(2) {
-            mockServer.connections().first().send(InstrumentAction.JumpToState(3).toJsonObject().toString())
+            mockServer.send(InstrumentAction.JumpToState(3).toJsonObject().toString())
         }
         assertThat(instrument.state.counter, equalTo(47))
 
         callThenWait(2) {
-            mockServer.connections().first().send(InstrumentAction.JumpToState(2).toJsonObject().toString())
+            mockServer.send(InstrumentAction.JumpToState(2).toJsonObject().toString())
         }
         assertThat(instrument.state.counter, equalTo(4))
 
         callThenWait(2) {
-            mockServer.connections().first().send(InstrumentAction.JumpToState(1).toJsonObject().toString())
+            mockServer.send(InstrumentAction.JumpToState(1).toJsonObject().toString())
         }
         assertThat(instrument.state.counter, equalTo(8))
 
@@ -142,7 +142,7 @@ class InstrumentTest {
         assertThat(instrument.state.counter, equalTo(16))
 
         callThenWait(2) {
-            mockServer.connections().first().send(InstrumentAction.JumpToState(0).toJsonObject().toString())
+            mockServer.send(InstrumentAction.JumpToState(0).toJsonObject().toString())
         }
         //at 0 index, counter is equal to 1
         assertThat(instrument.state.counter, equalTo(1))
@@ -150,21 +150,21 @@ class InstrumentTest {
         //the oldest one gets remove
         instrument.handleStateChangeFromAction(CounterState(27), CounterAction.IncreaseTo) //5
         callThenWait(2) {
-            mockServer.connections().first().send(InstrumentAction.JumpToState(0).toJsonObject().toString())
+            mockServer.send(InstrumentAction.JumpToState(0).toJsonObject().toString())
         }
         assertThat(instrument.state.counter, equalTo(8))
 
         //again, the oldest one gets remove
         instrument.handleStateChangeFromAction(CounterState(3), CounterAction.DecreaseTo) //6
         callThenWait(2) {
-            mockServer.connections().first().send(InstrumentAction.JumpToState(0).toJsonObject().toString())
+            mockServer.send(InstrumentAction.JumpToState(0).toJsonObject().toString())
         }
         assertThat(instrument.state.counter, equalTo(4))
 
         //again, the oldest one gets remove
         instrument.handleStateChangeFromAction(CounterState(10), CounterAction.IncreaseTo) //7
         callThenWait(2) {
-            mockServer.connections().first().send(InstrumentAction.JumpToState(0).toJsonObject().toString())
+            mockServer.send(InstrumentAction.JumpToState(0).toJsonObject().toString())
         }
         assertThat(instrument.state.counter, equalTo(47))
     }
