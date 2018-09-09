@@ -4,10 +4,10 @@ import com.github.kittinunf.redux.devTools.InstrumentAction
 import com.github.kittinunf.redux.devTools.socket.SocketServer
 import com.github.kittinunf.redux.devTools.ui.DevToolsPanelComponent
 import com.github.kittinunf.redux.devTools.util.addTo
+import com.github.kittinunf.redux.devTools.util.gson
 import com.github.kittinunf.redux.devTools.viewmodel.DevToolsStatusAction
 import com.github.kittinunf.redux.devTools.viewmodel.DevToolsStatusState
 import com.github.kittinunf.redux.devTools.viewmodel.DevToolsStatusState.Companion.reduce
-import com.google.gson.JsonParser
 import rx.Observable
 import rx.schedulers.SwingScheduler
 import rx.subscriptions.CompositeSubscription
@@ -21,10 +21,10 @@ class DevToolsStatusController(component: DevToolsPanelComponent) {
                 .map { DevToolsStatusAction.SetAddress(it.toString()) }
 
         val setClientCommand = Observable.merge(
-                SocketServer.messages.map { JsonParser().parse(it).asJsonObject }
-                        .filter { it["type"].asString == InstrumentAction.Type.INIT.name }
+                SocketServer.messages.map { gson.fromJson(it, InstrumentAction::class.java) }
+                        .ofType(InstrumentAction.Init::class.java)
                         .map {
-                            val payload = InstrumentAction.Init(it).payload
+                            val payload = it.payload
                             DevToolsStatusAction.SetClient(payload)
                         },
                 SocketServer.connects.filter { it.second == SocketServer.SocketStatus.CLOSE }

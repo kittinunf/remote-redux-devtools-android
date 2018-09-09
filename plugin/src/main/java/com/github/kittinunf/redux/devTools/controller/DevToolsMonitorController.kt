@@ -5,11 +5,11 @@ import com.github.kittinunf.redux.devTools.Payload
 import com.github.kittinunf.redux.devTools.socket.SocketServer
 import com.github.kittinunf.redux.devTools.ui.DevToolsPanelComponent
 import com.github.kittinunf.redux.devTools.util.addTo
+import com.github.kittinunf.redux.devTools.util.gson
 import com.github.kittinunf.redux.devTools.viewmodel.ChangeOperation
 import com.github.kittinunf.redux.devTools.viewmodel.DevToolsMonitorAction
 import com.github.kittinunf.redux.devTools.viewmodel.DevToolsMonitorState
 import com.github.kittinunf.redux.devTools.viewmodel.DevToolsMonitorState.Companion.reduce
-import com.google.gson.JsonParser
 import rx.Observable
 import rx.schedulers.SwingScheduler
 import rx.subscriptions.CompositeSubscription
@@ -26,14 +26,14 @@ class DevToolsMonitorController(component: DevToolsPanelComponent) {
     private val subscriptionBag = CompositeSubscription()
 
     init {
-        val resetItemsCommand = SocketServer.messages.map { JsonParser().parse(it).asJsonObject }
-                .filter { it["type"].asString == InstrumentAction.Type.INIT.name }
+        val resetItemsCommand = SocketServer.messages.map { gson.fromJson(it, InstrumentAction::class.java) }
+                .ofType(InstrumentAction.Init::class.java)
                 .map { DevToolsMonitorAction.SetItem() }
 
-        val addItemsCommand = SocketServer.messages.map { JsonParser().parse(it).asJsonObject }
-                .filter { it["type"].asString == InstrumentAction.Type.SET_STATE.name }
+        val addItemsCommand = SocketServer.messages.map { gson.fromJson(it, InstrumentAction::class.java) }
+                .ofType(InstrumentAction.SetState::class.java)
                 .map {
-                    val payload = InstrumentAction.SetState(it).payload
+                    val payload = it.payload
                     if (payload.reachMax) {
                         DevToolsMonitorAction.ShiftItem(payload)
                     } else {

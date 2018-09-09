@@ -1,5 +1,6 @@
 package com.github.kittinunf.redux.devTools
 
+import com.github.kittinunf.redux.devTools.util.gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 
