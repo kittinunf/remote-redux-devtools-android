@@ -3,13 +3,13 @@ package com.github.kittinunf.redux.devTools.controller
 import com.github.kittinunf.redux.devTools.InstrumentAction
 import com.github.kittinunf.redux.devTools.Payload
 import com.github.kittinunf.redux.devTools.socket.SocketServer
+import com.github.kittinunf.redux.devTools.state.ChangeOperation
+import com.github.kittinunf.redux.devTools.state.DevToolsMonitorAction
+import com.github.kittinunf.redux.devTools.state.DevToolsMonitorState
+import com.github.kittinunf.redux.devTools.state.DevToolsMonitorState.Companion.reduce
 import com.github.kittinunf.redux.devTools.ui.DevToolsPanelComponent
 import com.github.kittinunf.redux.devTools.util.addTo
 import com.github.kittinunf.redux.devTools.util.gson
-import com.github.kittinunf.redux.devTools.viewmodel.ChangeOperation
-import com.github.kittinunf.redux.devTools.viewmodel.DevToolsMonitorAction
-import com.github.kittinunf.redux.devTools.viewmodel.DevToolsMonitorState
-import com.github.kittinunf.redux.devTools.viewmodel.DevToolsMonitorState.Companion.reduce
 import rx.Observable
 import rx.schedulers.SwingScheduler
 import rx.subscriptions.CompositeSubscription

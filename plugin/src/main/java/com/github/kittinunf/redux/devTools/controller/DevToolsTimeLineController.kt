@@ -11,9 +11,9 @@ import com.github.kittinunf.redux.devTools.util.R
 import com.github.kittinunf.redux.devTools.util.addTo
 import com.github.kittinunf.redux.devTools.util.gson
 import com.github.kittinunf.redux.devTools.util.resource
-import com.github.kittinunf.redux.devTools.viewmodel.DevToolsTimeLineAction
-import com.github.kittinunf.redux.devTools.viewmodel.DevToolsTimeLineState
-import com.github.kittinunf.redux.devTools.viewmodel.DevToolsTimeLineState.Companion.reduce
+import com.github.kittinunf.redux.devTools.state.DevToolsTimeLineAction
+import com.github.kittinunf.redux.devTools.state.DevToolsTimeLineState
+import com.github.kittinunf.redux.devTools.state.DevToolsTimeLineState.Companion.reduce
 import rx.Observable
 import rx.schedulers.SwingScheduler
 import rx.subscriptions.CompositeSubscription

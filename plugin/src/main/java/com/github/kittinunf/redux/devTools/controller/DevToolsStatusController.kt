@@ -2,12 +2,12 @@ package com.github.kittinunf.redux.devTools.controller
 
 import com.github.kittinunf.redux.devTools.InstrumentAction
 import com.github.kittinunf.redux.devTools.socket.SocketServer
+import com.github.kittinunf.redux.devTools.state.DevToolsStatusAction
+import com.github.kittinunf.redux.devTools.state.DevToolsStatusState
+import com.github.kittinunf.redux.devTools.state.DevToolsStatusState.Companion.reduce
 import com.github.kittinunf.redux.devTools.ui.DevToolsPanelComponent
 import com.github.kittinunf.redux.devTools.util.addTo
 import com.github.kittinunf.redux.devTools.util.gson
-import com.github.kittinunf.redux.devTools.viewmodel.DevToolsStatusAction
-import com.github.kittinunf.redux.devTools.viewmodel.DevToolsStatusState
-import com.github.kittinunf.redux.devTools.viewmodel.DevToolsStatusState.Companion.reduce
 import rx.Observable
 import rx.schedulers.SwingScheduler
 import rx.subscriptions.CompositeSubscription
