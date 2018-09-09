@@ -27,17 +27,17 @@ class DevToolsMonitorController(component: DevToolsPanelComponent) {
 
     init {
         val resetItemsCommand = SocketServer.messages.map { JsonParser().parse(it).asJsonObject }
-                .filter { it["type"].asString == InstrumentAction.ActionType.INIT.name }
+                .filter { it["type"].asString == InstrumentAction.Type.INIT.name }
                 .map { DevToolsMonitorAction.SetItem() }
 
         val addItemsCommand = SocketServer.messages.map { JsonParser().parse(it).asJsonObject }
-                .filter { it["type"].asString == InstrumentAction.ActionType.STATE.name }
+                .filter { it["type"].asString == InstrumentAction.Type.SET_STATE.name }
                 .map {
-                    val state = InstrumentAction.SetState(it)
-                    if (state.payload.reachMax) {
-                        DevToolsMonitorAction.ShiftItem(state.payload)
+                    val payload = InstrumentAction.SetState(it).payload
+                    if (payload.reachMax) {
+                        DevToolsMonitorAction.ShiftItem(payload)
                     } else {
-                        DevToolsMonitorAction.AddItem(state.payload)
+                        DevToolsMonitorAction.AddItem(payload)
                     }
                 }
 

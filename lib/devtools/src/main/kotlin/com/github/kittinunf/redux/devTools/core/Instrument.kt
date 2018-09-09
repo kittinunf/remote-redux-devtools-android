@@ -6,6 +6,7 @@ import com.github.kittinunf.redux.devTools.socket.SocketClient
 import com.github.kittinunf.redux.devTools.socket.SocketStatus
 import com.google.gson.JsonParser
 import io.reactivex.disposables.CompositeDisposable
+import java.util.Date
 import java.util.UUID
 
 data class InstrumentOption(val host: String, val port: Int, val name: String, val maxAge: Int)
@@ -85,7 +86,10 @@ class Instrument<S>(private val options: InstrumentOption, private val initialSt
         }
         currentStateIndex = stateTimeLines.lastIndex
         val data = InstrumentAction.SetState(
-                Payload(state.toString(), action.javaClass.simpleName, isOverMaxAgeReached)
+                Payload(state.toString(),
+                        action.javaClass.simpleName,
+                        isOverMaxAgeReached,
+                        Date())
         )
         client.send(data.toJsonObject().toString())
     }

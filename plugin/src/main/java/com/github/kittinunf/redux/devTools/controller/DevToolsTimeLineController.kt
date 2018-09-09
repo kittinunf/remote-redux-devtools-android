@@ -29,7 +29,7 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
 
     init {
         val resetCommand = SocketServer.messages.map { JsonParser().parse(it).asJsonObject }
-                .filter { it["type"].asString == InstrumentAction.ActionType.INIT.name }
+                .filter { it["type"].asString == InstrumentAction.Type.INIT.name }
                 .map { DevToolsTimeLineAction.Reset(initialMaxValue) }
 
         val forwardCommand = component.forwardButtonDidPressed().map { DevToolsTimeLineAction.Forward }
@@ -42,11 +42,11 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
 
         val adjustMaxAndSetToMaxCommand = SocketServer.messages.map { JsonParser().parse(it).asJsonObject }
                 .filter {
-                    val isStateAction = it["type"].asString == InstrumentAction.ActionType.STATE.name
-                    val isOverMax = if (isStateAction) {
-                        it["payload"].asJsonObject["reach_max"].asBoolean
-                    } else false
-                    isStateAction and !isOverMax
+                    it["type"].asString == InstrumentAction.Type.SET_STATE.name
+                }
+                .filter {
+                    val payload = InstrumentAction.SetState(it).payload
+                    !payload.reachMax
                 }
                 .concatMap {
                     Observable.from(listOf(DevToolsTimeLineAction.AdjustMax, DevToolsTimeLineAction.SetToMax))

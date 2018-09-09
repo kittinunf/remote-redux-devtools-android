@@ -22,8 +22,11 @@ class DevToolsStatusController(component: DevToolsPanelComponent) {
 
         val setClientCommand = Observable.merge(
                 SocketServer.messages.map { JsonParser().parse(it).asJsonObject }
-                        .filter { it["type"].asString == InstrumentAction.ActionType.INIT.name }
-                        .map { DevToolsStatusAction.SetClient(it["payload"].asString) },
+                        .filter { it["type"].asString == InstrumentAction.Type.INIT.name }
+                        .map {
+                            val payload = InstrumentAction.Init(it).payload
+                            DevToolsStatusAction.SetClient(payload)
+                        },
                 SocketServer.connects.filter { it.second == SocketServer.SocketStatus.CLOSE }
                         .map { DevToolsStatusAction.SetClient("-") }
         )
