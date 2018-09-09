@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.github.kittinunf.redux.devTools.ReduxDevtools</id>
     <name>Remote Redux DevTools</name>
-    <version>1.0.0.alpha7</version>
+    <version>1.0.0.alpha8</version>
     <vendor email="kittinun.f@gmail.com" url="http://www.github.com/kittinunf">kittinunf</vendor>
 
     <description><![CDATA[

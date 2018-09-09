@@ -63,7 +63,6 @@ class DevToolsStore<S : State>(private val store: StoreType<S>) : StoreType<S> b
             if (action is DevToolsStateChangeAction) {
                 instrument.state
             } else {
-
                 instrument.handleStateChangeFromAction(reducedState, action)
                 reducedState
             }

@@ -15,7 +15,7 @@ buildscript {
         // lib
         gsonVersion = '2.7'
 
-        publishVersion = '1.0.0.alpha7'
+        publishVersion = '1.0.0.alpha8'
     }
 
     repositories {
