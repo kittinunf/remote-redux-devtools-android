@@ -9,11 +9,11 @@ import com.github.kittinunf.redux.devTools.ui.forwardButtonDidPressed
 import com.github.kittinunf.redux.devTools.ui.timeSliderValueDidChanged
 import com.github.kittinunf.redux.devTools.util.R
 import com.github.kittinunf.redux.devTools.util.addTo
+import com.github.kittinunf.redux.devTools.util.gson
 import com.github.kittinunf.redux.devTools.util.resource
-import com.github.kittinunf.redux.devTools.viewmodel.DevToolsTimeLineAction
-import com.github.kittinunf.redux.devTools.viewmodel.DevToolsTimeLineState
-import com.github.kittinunf.redux.devTools.viewmodel.DevToolsTimeLineState.Companion.reduce
-import com.google.gson.JsonParser
+import com.github.kittinunf.redux.devTools.state.DevToolsTimeLineAction
+import com.github.kittinunf.redux.devTools.state.DevToolsTimeLineState
+import com.github.kittinunf.redux.devTools.state.DevToolsTimeLineState.Companion.reduce
 import rx.Observable
 import rx.schedulers.SwingScheduler
 import rx.subscriptions.CompositeSubscription
@@ -28,8 +28,8 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
     private val subscriptionBag = CompositeSubscription()
 
     init {
-        val resetCommand = SocketServer.messages.map { JsonParser().parse(it).asJsonObject }
-                .filter { it["type"].asString == InstrumentAction.ActionType.INIT.name }
+        val resetCommand = SocketServer.messages.map { gson.fromJson(it, InstrumentAction::class.java) }
+                .ofType(InstrumentAction.Init::class.java)
                 .map { DevToolsTimeLineAction.Reset(initialMaxValue) }
 
         val forwardCommand = component.forwardButtonDidPressed().map { DevToolsTimeLineAction.Forward }
@@ -40,13 +40,11 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
 
         val setValueCommand = component.timeSliderValueDidChanged().map { DevToolsTimeLineAction.SetToValue((it.source as JSlider).value) }
 
-        val adjustMaxAndSetToMaxCommand = SocketServer.messages.map { JsonParser().parse(it).asJsonObject }
+        val adjustMaxAndSetToMaxCommand = SocketServer.messages.map { gson.fromJson(it, InstrumentAction::class.java) }
+                .ofType(InstrumentAction.SetState::class.java)
                 .filter {
-                    val isStateAction = it["type"].asString == InstrumentAction.ActionType.STATE.name
-                    val isOverMax = if (isStateAction) {
-                        it["payload"].asJsonObject["reach_max"].asBoolean
-                    } else false
-                    isStateAction and !isOverMax
+                    val payload = it.payload
+                    !payload.reachMax
                 }
                 .concatMap {
                     Observable.from(listOf(DevToolsTimeLineAction.AdjustMax, DevToolsTimeLineAction.SetToMax))
@@ -114,8 +112,8 @@ class DevToolsTimeLineController(component: DevToolsPanelComponent) {
                 .map { it.value }
                 .distinctUntilChanged()
                 .subscribe {
-                    val json = InstrumentAction.JumpToState(it).toJsonObject()
-                    SocketServer.send(json.toString())
+                    val json = gson.toJson(InstrumentAction.JumpToState(it), InstrumentAction::class.java)
+                    SocketServer.send(json)
                 }
                 .addTo(subscriptionBag)
     }

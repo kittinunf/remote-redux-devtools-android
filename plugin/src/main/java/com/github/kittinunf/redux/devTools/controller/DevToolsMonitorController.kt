@@ -3,13 +3,13 @@ package com.github.kittinunf.redux.devTools.controller
 import com.github.kittinunf.redux.devTools.InstrumentAction
 import com.github.kittinunf.redux.devTools.Payload
 import com.github.kittinunf.redux.devTools.socket.SocketServer
+import com.github.kittinunf.redux.devTools.state.ChangeOperation
+import com.github.kittinunf.redux.devTools.state.DevToolsMonitorAction
+import com.github.kittinunf.redux.devTools.state.DevToolsMonitorState
+import com.github.kittinunf.redux.devTools.state.DevToolsMonitorState.Companion.reduce
 import com.github.kittinunf.redux.devTools.ui.DevToolsPanelComponent
 import com.github.kittinunf.redux.devTools.util.addTo
-import com.github.kittinunf.redux.devTools.viewmodel.ChangeOperation
-import com.github.kittinunf.redux.devTools.viewmodel.DevToolsMonitorAction
-import com.github.kittinunf.redux.devTools.viewmodel.DevToolsMonitorState
-import com.github.kittinunf.redux.devTools.viewmodel.DevToolsMonitorState.Companion.reduce
-import com.google.gson.JsonParser
+import com.github.kittinunf.redux.devTools.util.gson
 import rx.Observable
 import rx.schedulers.SwingScheduler
 import rx.subscriptions.CompositeSubscription
@@ -26,18 +26,18 @@ class DevToolsMonitorController(component: DevToolsPanelComponent) {
     private val subscriptionBag = CompositeSubscription()
 
     init {
-        val resetItemsCommand = SocketServer.messages.map { JsonParser().parse(it).asJsonObject }
-                .filter { it["type"].asString == InstrumentAction.ActionType.INIT.name }
+        val resetItemsCommand = SocketServer.messages.map { gson.fromJson(it, InstrumentAction::class.java) }
+                .ofType(InstrumentAction.Init::class.java)
                 .map { DevToolsMonitorAction.SetItem() }
 
-        val addItemsCommand = SocketServer.messages.map { JsonParser().parse(it).asJsonObject }
-                .filter { it["type"].asString == InstrumentAction.ActionType.STATE.name }
+        val addItemsCommand = SocketServer.messages.map { gson.fromJson(it, InstrumentAction::class.java) }
+                .ofType(InstrumentAction.SetState::class.java)
                 .map {
-                    val state = InstrumentAction.SetState(it)
-                    if (state.payload.reachMax) {
-                        DevToolsMonitorAction.ShiftItem(state.payload)
+                    val payload = it.payload
+                    if (payload.reachMax) {
+                        DevToolsMonitorAction.ShiftItem(payload)
                     } else {
-                        DevToolsMonitorAction.AddItem(state.payload)
+                        DevToolsMonitorAction.AddItem(payload)
                     }
                 }
 

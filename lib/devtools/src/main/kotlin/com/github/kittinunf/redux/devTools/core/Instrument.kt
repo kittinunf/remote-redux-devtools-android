@@ -4,8 +4,9 @@ import com.github.kittinunf.redux.devTools.InstrumentAction
 import com.github.kittinunf.redux.devTools.Payload
 import com.github.kittinunf.redux.devTools.socket.SocketClient
 import com.github.kittinunf.redux.devTools.socket.SocketStatus
-import com.google.gson.JsonParser
+import com.github.kittinunf.redux.devTools.util.gson
 import io.reactivex.disposables.CompositeDisposable
+import java.util.Date
 import java.util.UUID
 
 data class InstrumentOption(val host: String, val port: Int, val name: String, val maxAge: Int)
@@ -84,10 +85,14 @@ class Instrument<S>(private val options: InstrumentOption, private val initialSt
             stateTimeLines.removeAt(0)
         }
         currentStateIndex = stateTimeLines.lastIndex
-        val data = InstrumentAction.SetState(
-                Payload(state.toString(), action.javaClass.simpleName, isOverMaxAgeReached)
-        )
-        client.send(data.toJsonObject().toString())
+
+        val json = gson.toJson(InstrumentAction.SetState(
+                Payload(state.toString(),
+                        action.javaClass.simpleName,
+                        isOverMaxAgeReached,
+                        Date())
+        ), InstrumentAction::class.java)
+        client.send(json)
     }
 
     fun close() {
@@ -106,15 +111,17 @@ class Instrument<S>(private val options: InstrumentOption, private val initialSt
 
     private fun handleConnectionOpened() {
         onOpen?.invoke()
-        val message = InstrumentAction.Init(options.name).toJsonObject().toString()
-        client.send(message)
+        client.send(gson.toJson(InstrumentAction.Init(options.name), InstrumentAction::class.java))
     }
 
     private fun handleMessageReceived(s: String) {
-        val json = JsonParser().parse(s).asJsonObject
-        val index = InstrumentAction.JumpToState(json).payload
-        currentStateIndex = index
-        onMessageReceived?.invoke(state)
+        val action = gson.fromJson(s, InstrumentAction::class.java)
+        (action as? InstrumentAction.JumpToState)?.let {
+            val index = action.payload
+            currentStateIndex = index
+            onMessageReceived?.invoke(state)
+        }
+
     }
 
 }

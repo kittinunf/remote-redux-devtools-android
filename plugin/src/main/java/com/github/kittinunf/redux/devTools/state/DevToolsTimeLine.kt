@@ -1,4 +1,4 @@
-package com.github.kittinunf.redux.devTools.viewmodel
+package com.github.kittinunf.redux.devTools.state
 
 sealed class DevToolsTimeLineAction {
 

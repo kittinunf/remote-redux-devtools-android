@@ -1,4 +1,4 @@
-package com.github.kittinunf.redux.devTools.viewmodel
+package com.github.kittinunf.redux.devTools.state
 
 import com.github.kittinunf.redux.devTools.Payload
 
