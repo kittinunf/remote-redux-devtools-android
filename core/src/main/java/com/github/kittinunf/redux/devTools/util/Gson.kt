@@ -15,11 +15,11 @@ private val dateDeserializer = JsonDeserializer<Date> { json, _, _ ->
     Date(json.asLong)
 }
 
-private val instrumentActionSerializer = JsonSerializer<InstrumentAction> { src, typeOfSrc, context ->
+private val instrumentActionSerializer = JsonSerializer<InstrumentAction> { src, _, _ ->
     src.toJsonObject()
 }
 
-private val instrumentActionDeserializer = JsonDeserializer<InstrumentAction> { json, typeOfT, context ->
+private val instrumentActionDeserializer = JsonDeserializer<InstrumentAction> { json, _, _ ->
     val jsonObject = json.asJsonObject
     when (enumValueOf<InstrumentAction.Type>(jsonObject["type"].asString)) {
         InstrumentAction.Type.INIT -> InstrumentAction.Init(jsonObject)
