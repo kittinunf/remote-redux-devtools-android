@@ -25,6 +25,6 @@ repositories {
 }
 
 dependencies {
-  implementation 'com.github.kittinunf:remote-redux-devtools-android:1.0.0.alpha8'
+  implementation "com.github.kittinunf.remote-redux-devtools-android:core:1.0.0.alpha8"
 }
 ```
